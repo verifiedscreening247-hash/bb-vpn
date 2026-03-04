@@ -1,500 +1,440 @@
-<!-- index.html — Big Booty VPN (cheeky, bright, but not explicit)
-     Drop this into a folder and open in browser.
-     Pages included: /terms.html /privacy.html /acceptable-use.html
--->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Big Booty VPN — Privacy with a little bounce</title>
-  <meta name="description" content="Big Booty VPN — fast, private, and cheeky. WireGuard-powered VPN subscription." />
+  <title>Big Booty VPN —  Privacy for G00ners</title>
+  <meta name="description" content="Big Booty VPN — private, secure, and fast. Subscribe NOW!" />
+
   <style>
+    /* ======== RETRO 2000s LOOK ======== */
     :root{
-      --bg:#07020a;
-      --card:#120216;
-      --text:#f7e7ff;
-      --muted:#d9b6ffcc;
-      --line:#ffffff12;
-      --hot1:#ff2bd6;
-      --hot2:#ffb000;
-      --hot3:#7c4dff;
-      --ok:#6dff9a;
-      --warn:#ffd56d;
-      --bad:#ff6d6d;
-      --radius:22px;
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --pink:#ff2bd6;
+      --hotpink:#ff55e8;
+      --deep:#2a0030;
+      --purple:#7c4dff;
+      --gold:#ffb000;
+      --cyan:#00e7ff;
+      --white:#fff;
+      --black:#000;
+      --shadow: 0 0 0 3px #000, 0 0 0 6px var(--gold), 0 0 22px rgba(255,43,214,.65);
     }
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      color:var(--text);
-      font-family:var(--sans);
-      background:
-        radial-gradient(1200px 600px at 20% 10%, rgba(255,43,214,.28), transparent 55%),
-        radial-gradient(900px 700px at 80% 35%, rgba(124,77,255,.24), transparent 55%),
-        radial-gradient(1000px 700px at 55% 95%, rgba(255,176,0,.14), transparent 60%),
-        linear-gradient(180deg, #050007, #09010c 55%, #050007);
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ max-width:1100px; margin:0 auto; padding:28px 18px 70px; }
+      font-family: "Comic Sans MS","Comic Sans", "Trebuchet MS", Arial, sans-serif;
+      color:#120016;
 
-    /* Top bar */
-    .top{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(7,2,10,.78), rgba(7,2,10,.40));
-      border-bottom:1px solid var(--line);
+      /* garish tiled background (no external images needed) */
+      background:
+        radial-gradient(circle at 20px 20px, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/44px 44px,
+        radial-gradient(circle at 10px 30px, rgba(0,231,255,.45) 0 2px, transparent 3px) 0 0/44px 44px,
+        linear-gradient(135deg, #ffb6ff 0%, #ff66ea 20%, #ff2bd6 50%, #7c4dff 100%);
     }
-    .top .wrap{ padding:14px 18px; display:flex; align-items:center; gap:14px; }
+
+    /* Old-school centered wrapper */
+    .wrap{
+      max-width: 980px;
+      margin: 14px auto 60px;
+      padding: 0 10px;
+    }
+
+    /* “Sticker” helpers */
+    .sticker{
+      display:inline-block;
+      padding: 6px 10px;
+      border: 3px solid #000;
+      background: #fff;
+      box-shadow: var(--shadow);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .sticker.pink{ background: #ffe1fb; }
+    .sticker.gold{ background: #fff1c7; }
+    .sticker.cyan{ background: #d9fbff; }
+    .blink{
+      animation: blink 1s steps(2,end) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Main header block */
+    .topbar{
+      border: 4px solid #000;
+      background: linear-gradient(90deg, #ffffff 0%, #ffe3fb 35%, #fff8cf 70%, #d9fbff 100%);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      position: relative;
+    }
     .brand{
-      display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px;
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
     }
     .logo{
-      width:38px; height:38px; border-radius:14px;
-      background: conic-gradient(from 220deg, var(--hot1), var(--hot2), var(--hot3), var(--hot1));
-      box-shadow: 0 12px 30px rgba(255,43,214,.18);
-      position:relative;
-      overflow:hidden;
+      width: 58px; height: 58px;
+      border: 4px solid #000;
+      background: conic-gradient(from 220deg, var(--pink), var(--gold), var(--purple), var(--cyan), var(--pink));
+      box-shadow: var(--shadow);
     }
-    .logo:after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%);
-      transform: rotate(25deg);
+    .title{
+      line-height: 1.05;
     }
+    .title h1{
+      margin:0;
+      font-size: 34px;
+      color: #000;
+      text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,.25);
+    }
+    .title .sub{
+      font-weight: 800;
+      color: #2a0030;
+      margin-top: 2px;
+    }
+
+    /* Navigation like old portals */
     .nav{
-      margin-left:auto;
-      display:flex; gap:14px; align-items:center;
-      color:var(--muted);
-      font-weight:600;
+      margin-top: 10px;
+      display:flex;
+      gap:10px;
       flex-wrap:wrap;
-      justify-content:flex-end;
+      align-items:center;
     }
     .nav a{
-      padding:10px 12px; border-radius:14px;
-      border:1px solid transparent;
-      transition:.18s ease;
-    }
-    .nav a:hover{ border-color:var(--line); background:rgba(255,255,255,.04); color:var(--text); }
-
-    .btn{
-      border:none; cursor:pointer;
-      padding:12px 16px; border-radius:16px;
-      font-weight:800;
-      letter-spacing:.2px;
-      color:#180019;
-      background: linear-gradient(135deg, var(--hot2), var(--hot1));
-      box-shadow: 0 16px 40px rgba(255,43,214,.18);
-      transition: transform .12s ease, filter .12s ease;
-      display:inline-flex; align-items:center; gap:10px;
-    }
-    .btn:hover{ transform: translateY(-1px); filter:saturate(1.08) brightness(1.05); }
-    .btn:active{ transform: translateY(0px) scale(.99); }
-    .btn.secondary{
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid var(--line);
-      box-shadow:none;
-    }
-    .tag{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      background: rgba(255,255,255,.03);
-      font-weight:700;
-      font-size:13px;
-    }
-    .dot{ width:8px; height:8px; border-radius:99px; background: var(--ok); box-shadow:0 0 20px rgba(109,255,154,.3); }
-
-    /* Hero */
-    .hero{
-      padding:34px 0 12px;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    @media (max-width: 900px){ .hero{ grid-template-columns:1fr; } }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    .hero-left{ padding:26px; }
-    h1{
-      font-size: clamp(34px, 4.2vw, 54px);
-      line-height:1.02;
-      margin:10px 0 12px;
-      letter-spacing:-.8px;
-    }
-    .grad{
-      background: linear-gradient(90deg, var(--hot2), var(--hot1), var(--hot3));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .lead{
-      color:var(--muted);
-      font-size: 16px;
-      line-height:1.6;
-      margin: 0 0 18px;
-      max-width: 58ch;
-    }
-    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
-    .mini{
-      margin-top:14px;
-      display:flex; gap:10px; flex-wrap:wrap;
-      color:var(--muted);
-      font-weight:700;
-      font-size:13px;
-    }
-    .mini .pill{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px dashed rgba(255,255,255,.14);
-      background: rgba(255,255,255,.02);
-    }
-
-    /* Right hero (pricing teaser) */
-    .hero-right{ padding:22px; display:flex; flex-direction:column; gap:14px; }
-    .price{
-      display:flex; align-items:baseline; gap:10px;
-    }
-    .price .n{
-      font-size:42px; font-weight:900;
-    }
-    .price .p{ color:var(--muted); font-weight:800; }
-    .divider{ height:1px; background:var(--line); margin:8px 0; }
-    .list{ margin:0; padding:0; list-style:none; display:grid; gap:10px; }
-    .li{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-    }
-    .check{
-      width:18px; height:18px; border-radius:7px;
-      background: linear-gradient(135deg, var(--hot2), var(--hot1));
-      flex:0 0 auto;
-      margin-top:2px;
-    }
-    .li b{ display:block; }
-    .li span{ color:var(--muted); font-weight:650; font-size:13px; line-height:1.4; }
-
-    /* Sections */
-    section{ margin-top:22px; }
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:14px;
-    }
-    @media (max-width: 900px){ .grid3{ grid-template-columns:1fr; } }
-    .feature{ padding:18px; }
-    .k{
-      font-family:var(--mono);
-      font-size:12px;
-      color:#ffd2ff;
-      opacity:.9;
-      background: rgba(255,43,214,.10);
-      border:1px solid rgba(255,43,214,.18);
-      padding:6px 10px;
-      border-radius:999px;
       display:inline-block;
+      padding: 8px 10px;
+      border: 3px solid #000;
+      background:#fff;
+      box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff, 0 0 0 6px var(--pink);
+      font-weight: 900;
+      color:#000;
+      text-decoration:none;
     }
-    .feature h3{ margin:12px 0 8px; font-size:18px; }
-    .feature p{ margin:0; color:var(--muted); line-height:1.55; }
+    .nav a:hover{ transform: translateY(-1px); }
 
-    /* Locations */
-    .locations{ padding:18px; }
-    .locs{
-      display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
-      margin-top:12px;
+    /* Marquee banner */
+    .marquee{
+      margin-top: 10px;
+      border: 4px dashed #000;
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 8px 0;
+      overflow:hidden;
     }
-    @media (max-width: 900px){ .locs{ grid-template-columns:1fr; } }
-    .loc{
-      padding:14px; border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-      display:flex; justify-content:space-between; align-items:center;
-      gap:12px;
+    .marquee .track{
+      display:inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      animation: scroll 16s linear infinite;
+      font-weight: 900;
+      font-size: 18px;
+      color:#000;
     }
-    .loc .name{ font-weight:900; }
-    .loc .meta{ color:var(--muted); font-weight:750; font-size:13px; }
-    .badge{
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color:#ffd2ff;
-      font-weight:800;
-      font-size:12px;
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-120%); }
     }
+    .spark{
+      color: var(--pink);
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    /* Main layout (table-ish vibe, but still responsive) */
+    .grid{
+      display:grid;
+      grid-template-columns: 240px 1fr 240px;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      border: 4px solid #000;
+      background: rgba(255,255,255,.90);
+      box-shadow: var(--shadow);
+      padding: 10px;
+    }
+    .panel h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      background: #000;
+      color: #fff;
+      padding: 6px 8px;
+      border: 3px solid #000;
+    }
+    .tiny{
+      font-size: 12px;
+      font-weight: 800;
+      color: #2a0030;
+      line-height: 1.45;
+    }
+
+    /* Big CTA button */
+    .cta{
+      display:block;
+      width:100%;
+      margin-top: 10px;
+      padding: 14px 12px;
+      text-align:center;
+      border: 5px solid #000;
+      background: linear-gradient(135deg, var(--gold), var(--pink));
+      color:#000;
+      font-weight: 1000;
+      font-size: 18px;
+      text-decoration:none;
+      box-shadow: var(--shadow);
+    }
+    .cta:hover{ filter:saturate(1.1) brightness(1.03); transform: translateY(-1px); }
+
+    .pricebox{
+      border: 4px dotted #000;
+      background: #ffe1fb;
+      padding: 10px;
+      box-shadow: 0 0 0 3px #000, 0 0 18px rgba(0,0,0,.25);
+    }
+    .price{
+      font-size: 34px;
+      font-weight: 1000;
+      color:#000;
+      text-shadow: 2px 2px 0 #fff;
+      margin: 2px 0 4px;
+    }
+    .features li{
+      margin: 6px 0;
+      font-weight: 900;
+    }
+
+    /* Center content card */
+    .hero{
+      border: 5px solid #000;
+      background: linear-gradient(180deg, #fff, #ffe1fb 45%, #fff8cf);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .hero h3{
+      margin: 0 0 6px;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #000;
+    }
+    .hero p{
+      margin: 0 0 10px;
+      font-weight: 800;
+      line-height: 1.5;
+      color:#2a0030;
+    }
+    .badges{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 10px 0;
+    }
+
+    /* Retro “button row” */
+    .btnrow{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .btn{
+      display:inline-block;
+      padding: 10px 12px;
+      border: 4px solid #000;
+      background: #fff;
+      box-shadow: 0 0 0 3px #000, 0 0 0 6px var(--cyan);
+      font-weight: 1000;
+      text-decoration:none;
+      color:#000;
+    }
+    .btn.pink{ box-shadow: 0 0 0 3px #000, 0 0 0 6px var(--pink); }
+    .btn.gold{ box-shadow: 0 0 0 3px #000, 0 0 0 6px var(--gold); }
+    .btn:hover{ transform: translateY(-1px); }
 
     /* Footer */
-    footer{
-      margin-top:22px;
-      color:var(--muted);
-      font-weight:650;
-      font-size:13px;
+    .footer{
+      margin-top: 12px;
+      border: 4px solid #000;
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow);
+      padding: 10px;
+      font-weight: 800;
+      color:#2a0030;
     }
-    .foot{
-      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
-      padding:18px;
-    }
-    .links{ display:flex; gap:12px; flex-wrap:wrap; }
-    .links a{
-      padding:8px 10px; border-radius:14px;
-      border:1px solid transparent;
-    }
-    .links a:hover{ border-color:var(--line); background: rgba(255,255,255,.03); color:var(--text); }
-    .hint{
-      font-size:12px;
-      opacity:.95;
-      max-width: 72ch;
-    }
+    .footer a{ color:#000; font-weight: 1000; }
+    .sep{ color:#000; padding:0 6px; }
 
-    /* playful floating sparkle */
-    .spark{
-      position:absolute;
-      width: 520px; height: 520px;
-      border-radius: 999px;
-      filter: blur(55px);
-      opacity: .16;
-      pointer-events:none;
-      background: radial-gradient(circle at 30% 30%, var(--hot1), transparent 55%),
-                  radial-gradient(circle at 70% 60%, var(--hot2), transparent 60%);
-      top:-260px; right:-240px;
-      transform: rotate(12deg);
+    /* Silly retro “counter” */
+    .counter{
+      font-family: "Courier New", monospace;
+      background:#000;
+      color:#00ff5a;
+      display:inline-block;
+      padding: 6px 10px;
+      border: 3px solid #000;
+      box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--pink);
+      letter-spacing: 2px;
+      font-weight: 1000;
     }
   </style>
 </head>
+
 <body>
-  <div class="top">
-    <div class="wrap">
+  <div class="wrap">
+    <div class="topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
-        <div>
-          Big Booty VPN<br/>
-          <span style="color:var(--muted); font-weight:750; font-size:12px;">privacy with a little bounce</span>
+        <div class="title">
+          <h1>Big Booty VPN <span class="blink">★</span></h1>
+          <div class="sub">Serious privacy. Serious encryption. (Never no peeking 👀)</div>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <span class="sticker gold">WIREGUARD POWER</span>
+          <span class="sticker cyan">5 DEVICES</span>
+          <span class="counter" title="totally legit visitor counter">000042069</span>
         </div>
       </div>
 
-      <nav class="nav">
-        <a href="#features">Features</a>
-        <a href="#locations">Locations</a>
-        <a href="#pricing">Pricing</a>
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html">Terms</a>
+      <div class="nav">
+        <a href="#buy">BUY NOW</a>
+        <a href="#features">FEATURES</a>
+        <a href="/privacy.html">PRIVACY</a>
+        <a href="/terms.html">TERMS</a>
         <a href="/acceptable-use.html">AUP</a>
-        <button class="btn" onclick="fakeCheckout()">Start Free Trial*</button>
-      </nav>
+        <a href="mailto:verifiedscreening247@gmail.com">SUPPORT</a>
+      </div>
+    </div>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span class="spark">★</span> BIG BOOTY VPN <span class="spark">★</span>
+        keep your data covered • fast tunnels • clean exits • no buffering
+        <span class="spark">★</span> SUBSCRIBE NOW <span class="spark">★</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT SIDEBAR -->
+      <aside class="panel">
+        <h2>Hot Deals</h2>
+        <div class="pricebox">
+          <div class="tiny">Monthly subscription</div>
+          <div class="price">$6.96</div>
+          <div class="tiny">Cancel anytime.</div>
+          <a class="cta" id="buy" href="https://buy.stripe.com/dRm5kFgJpbdzciE1jJ1sQ00" target="_blank" rel="noopener">GO TO CHECKOUT ➜</a>
+          <div class="tiny" style="margin-top:8px;">
+            Support: <b>verifiedscreening247@gmail.com</b>
+          </div>
+        </div>
+
+        <div class="badges" style="margin-top:12px;">
+          <span class="sticker pink">PRIVATE</span>
+          <span class="sticker gold">FAST</span>
+          <span class="sticker cyan">SECURE</span>
+        </div>
+
+        <div class="tiny" style="margin-top:10px;">
+          <b>Legal:</b> Verified Screening 24/7 LLC (PA).<br/>
+          Links: <a href="/terms.html">Terms</a> <span class="sep">•</span>
+          <a href="/privacy.html">Privacy</a> <span class="sep">•</span>
+          <a href="/acceptable-use.html">AUP</a>
+        </div>
+      </aside>
+
+      <!-- CENTER -->
+      <main class="hero">
+        <h3 id="features">Welcome to the best VPN on the internet for g00ning</h3>
+        <p>
+          Big Booty VPN keeps your connection private and your browsing less exposed.
+          Serious security, serious encryption.
+        </p>
+
+        <div class="badges">
+          <span class="sticker gold">EU • US-EAST • SINGAPORE</span>
+          <span class="sticker cyan">ONE CLICK CONNECT</span>
+          <span class="sticker pink blink">NEW!</span>
+        </div>
+
+        <div class="panel" style="margin-top:12px; background:rgba(255,255,255,.96);">
+          <h2>Features (the good kind)</h2>
+          <ul class="features">
+            <li>WireGuard protocol for smooth, modern speed</li>
+            <li>3 starter locations: EU / US-East / Singapore</li>
+            <li>5 devices included — keep your whole squad covered</li>
+            <li>Minimal data by design (see Privacy)</li>
+            <li>Fair use & anti-abuse rules (see AUP)</li>
+          </ul>
+
+          <div class="btnrow">
+            <a class="btn pink" href="https://buy.stripe.com/dRm5kFgJpbdzciE1jJ1sQ00" target="_blank" rel="noopener">SUBSCRIBE</a>
+            <a class="btn gold" href="/privacy.html">READ PRIVACY</a>
+            <a class="btn" href="mailto:verifiedscreening247@gmail.com?subject=Big%20Booty%20VPN%20Support">EMAIL SUPPORT</a>
+          </div>
+
+          <div class="tiny" style="margin-top:10px;">
+            Note: No VPN can promise “perfect anonymity.” We focus on protecting traffic in transit and improving privacy.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:12px; background:rgba(255,255,255,.96);">
+          <h2>FAQ</h2>
+          <div class="tiny">
+            <b>Do you log browsing history?</b><br/>
+            The service is not designed to record the sites you visit. We keep minimal account/billing data and limited diagnostics to keep things stable.
+            <br/><br/>
+            <b>Will it work everywhere?</b><br/>
+            We aim for reliability, but we don’t guarantee it on every network/device at all times.
+            <br/><br/>
+            <b>Can I share my account?</b><br/>
+            Keep it to your own devices. If it turns into a group project, we may cut it off (AUP).
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="panel">
+        <h2>Retro Tools</h2>
+        <div class="tiny">
+          <b>Downloads:</b> (coming soon)<br/>
+          Windows • macOS • iOS • Android
+        </div>
+
+        <div class="panel" style="margin-top:10px; background:rgba(255,255,255,.96);">
+          <h2>Status</h2>
+          <div class="tiny">
+            EU: <span class="sticker cyan">ONLINE</span><br/><br/>
+            US-East: <span class="sticker cyan">ONLINE</span><br/><br/>
+            Singapore: <span class="sticker gold">ONLINE*</span><br/>
+            <span class="tiny">*sometimes extra spicy ping</span>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:10px; background:rgba(255,255,255,.96);">
+          <h2>Legal Corner</h2>
+          <div class="tiny">
+            Verified Screening 24/7 LLC (PA).<br/>
+            Support: <b>verifiedscreening247@gmail.com</b><br/>
+            <br/>
+            <a class="btn" href="/terms.html">Terms</a>
+            <a class="btn" href="/privacy.html">Privacy</a>
+            <a class="btn" href="/acceptable-use.html">AUP</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div>
+        <b>Big Booty VPN</b> — retro vibes, modern tunnels.
+        <span class="sep">•</span>
+        Support: <a href="mailto:verifiedscreening247@gmail.com">verifiedscreening247@gmail.com</a>
+        <span class="sep">•</span>
+        <a href="/terms.html">Terms</a>
+        <span class="sep">•</span>
+        <a href="/privacy.html">Privacy</a>
+        <span class="sep">•</span>
+        <a href="/acceptable-use.html">AUP</a>
+      </div>
     </div>
   </div>
-
-  <main class="wrap">
-    <div class="hero">
-      <div class="card hero-left">
-        <div class="spark" aria-hidden="true"></div>
-        <span class="tag"><span class="dot"></span> WireGuard-powered • Fast • Secure-ish (the good kind)</span>
-        <h1>
-          Keep your data <span class="grad">covered</span>,<br/>
-          keep your vibes <span class="grad">cheeky</span>.
-        </h1>
-        <p class="lead">
-          Big Booty VPN is a bright, bold VPN subscription that keeps your connection private and your
-          online footprint a little less… exposed. Flirty branding, serious encryption.
-        </p>
-
-        <div class="hero-actions">
-          <button class="btn" onclick="fakeCheckout()">Get Big Booty</button>
-          <button class="btn secondary" onclick="scrollToId('pricing')">See pricing</button>
-        </div>
-
-        <div class="mini">
-          <span class="pill">No browsing history logging (by design)</span>
-          <span class="pill">5 devices included</span>
-          <span class="pill">Cancel anytime</span>
-          <span class="pill">Support: <b id="supportEmail" style="color:var(--text); font-weight:900;">support@yourdomain.com</b></span>
-        </div>
-
-        <p class="hint" style="margin-top:14px; color:var(--muted);">
-          *“Trial” button is a placeholder in this template. Hook it up to your Stripe Checkout session
-          when you wire the backend.
-        </p>
-      </div>
-
-      <div class="card hero-right" id="pricing">
-        <span class="k">PRICING</span>
-        <div class="price">
-          <div class="n">$6.99</div>
-          <div class="p">/ month</div>
-        </div>
-        <div style="color:var(--muted); font-weight:750; line-height:1.45;">
-          Enough protection to keep things private — without killing the mood (or the speed).
-        </div>
-        <div class="divider"></div>
-        <ul class="list">
-          <li class="li"><span class="check"></span><div><b>5 devices</b><span>Phones, laptops, tablets — keep your whole squad… covered.</span></div></li>
-          <li class="li"><span class="check"></span><div><b>3 core locations</b><span>EU, US-East, Singapore. More buns—uh, regions—later.</span></div></li>
-          <li class="li"><span class="check"></span><div><b>Fast protocol</b><span>WireGuard for smooth, low-latency connections.</span></div></li>
-        </ul>
-        <div class="divider"></div>
-        <button class="btn" onclick="fakeCheckout()">Checkout (Stripe)</button>
-        <button class="btn secondary" onclick="scrollToId('features')">What’s inside?</button>
-      </div>
-    </div>
-
-    <section id="features" class="grid3">
-      <div class="card feature">
-        <span class="k">PRIVACY</span>
-        <h3>Less snooping, more smoothing.</h3>
-        <p>
-          We don’t build the service to record what you do online. We focus on minimal account data and
-          basic diagnostics so things don’t fall apart mid-connection.
-        </p>
-      </div>
-      <div class="card feature">
-        <span class="k">SPEED</span>
-        <h3>Quick connect. No awkward buffering.</h3>
-        <p>
-          WireGuard keeps it light, fast, and modern. Because nobody wants a slow handshake.
-        </p>
-      </div>
-      <div class="card feature">
-        <span class="k">CONTROL</span>
-        <h3>Pick your region. Keep it consensual.</h3>
-        <p>
-          Choose EU / US-East / Singapore, or let “Auto” find the best route. You’re in charge of the vibe.
-        </p>
-      </div>
-    </section>
-
-    <section id="locations">
-      <div class="card locations">
-        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-          <div>
-            <span class="k">LOCATIONS</span>
-            <h2 style="margin:10px 0 0; font-size:26px; letter-spacing:-.4px;">Three tasty starters.</h2>
-            <div style="color:var(--muted); font-weight:700; margin-top:6px;">
-              Solid coverage for MVP — expand when your userbase gets… hungry.
-            </div>
-          </div>
-          <span class="tag"><span class="dot"></span> Status: <span style="color:var(--text); font-weight:900;">Online</span></span>
-        </div>
-
-        <div class="locs">
-          <div class="loc">
-            <div>
-              <div class="name">Europe (NL/DE)</div>
-              <div class="meta">Low latency for EU users</div>
-            </div>
-            <span class="badge">FAST</span>
-          </div>
-          <div class="loc">
-            <div>
-              <div class="name">USA (East)</div>
-              <div class="meta">Great for US-East &amp; global routes</div>
-            </div>
-            <span class="badge">SOLID</span>
-          </div>
-          <div class="loc">
-            <div>
-              <div class="name">Singapore</div>
-              <div class="meta">SEA hub, nice balance</div>
-            </div>
-            <span class="badge">SPICY*</span>
-          </div>
-        </div>
-
-        <p class="hint" style="margin-top:12px;">
-          *Spicy = a little extra ping sometimes. We’ll tune the MTU like a professional… masseuse.
-        </p>
-      </div>
-    </section>
-
-    <section id="faq" class="grid3">
-      <div class="card feature">
-        <span class="k">FAQ</span>
-        <h3>Do you keep logs?</h3>
-        <p>
-          We keep minimal account + billing records, and limited diagnostics to fix crashes/connection issues.
-          We don’t intend to store browsing history.
-        </p>
-      </div>
-      <div class="card feature">
-        <span class="k">FAQ</span>
-        <h3>Will it make me “invisible”?</h3>
-        <p>
-          No service can promise that. We improve privacy and protect traffic in transit — but “perfect anonymity”
-          is a fantasy (and we’re not selling fantasies).
-        </p>
-      </div>
-      <div class="card feature">
-        <span class="k">FAQ</span>
-        <h3>Can I share my account?</h3>
-        <p>
-          Keep it to your own devices. If you turn it into a group project, we’ll have to cut it off (see AUP).
-        </p>
-      </div>
-    </section>
-
-    <footer class="card foot">
-      <div>
-        <div style="font-weight:900; color:var(--text);">Big Booty VPN</div>
-        <div class="hint">
-          Flirty brand. Serious intent. Please use responsibly.
-          For legal: <a href="/terms.html">Terms</a> • <a href="/privacy.html">Privacy</a> • <a href="/acceptable-use.html">AUP</a>
-        </div>
-      </div>
-      <div class="links">
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html">Terms</a>
-        <a href="/acceptable-use.html">Acceptable Use</a>
-        <a href="#" onclick="mailtoSupport(event)">Support</a>
-      </div>
-    </footer>
-  </main>
-
-  <script>
-    // Replace these with your real values
-    const CONFIG = {
-      supportEmail: "support@yourdomain.com",
-      productName: "Big Booty VPN",
-      stripeCheckoutUrl: "" // put your Stripe Checkout Session URL or route here
-    };
-
-    document.getElementById("supportEmail").textContent = CONFIG.supportEmail;
-
-    function scrollToId(id){
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
-    }
-
-    function mailtoSupport(e){
-      e.preventDefault();
-      window.location.href = "mailto:" + CONFIG.supportEmail + "?subject=" + encodeURIComponent(CONFIG.productName + " Support");
-    }
-
-    function fakeCheckout(){
-      // Hook up Stripe Checkout:
-      // Option A: redirect to CONFIG.stripeCheckoutUrl if it's a valid URL.
-      // Option B: call your backend to create a Checkout Session and then redirect.
-      if(CONFIG.stripeCheckoutUrl){
-        window.location.href = CONFIG.stripeCheckoutUrl;
-        return;
-      }
-      alert("Checkout placeholder ✅\n\nWire this button to Stripe Checkout (create session → redirect).");
-    }
-  </script>
 </body>
 </html>
