@@ -4,59 +4,175 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Privacy — Big Booty VPN</title>
+  <title>Privacy Policy — Big Booty VPN</title>
   <style>
-    body{margin:0;background:#07020a;color:#f7e7ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
-    a{color:#ff2bd6;text-decoration:none}
-    .wrap{max-width:920px;margin:0 auto;padding:28px 18px 70px;}
-    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:18px;line-height:1.65}
-    h1{margin:0 0 10px}
-    h2{margin:22px 0 8px;font-size:18px}
-    .muted{color:rgba(217,182,255,.85)}
-    code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:8px}
+    :root{
+      --pink:#ff2bd6; --purple:#7c4dff; --gold:#ffb000; --cyan:#00e7ff;
+      --ink:#120016; --paper:rgba(255,255,255,.92);
+      --shadow: 0 0 0 3px #000, 0 0 0 6px var(--gold), 0 0 22px rgba(255,43,214,.55);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Comic Sans MS","Comic Sans","Trebuchet MS",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 20px 20px, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/44px 44px,
+        radial-gradient(circle at 10px 30px, rgba(0,231,255,.45) 0 2px, transparent 3px) 0 0/44px 44px,
+        linear-gradient(135deg, #ffb6ff 0%, #ff66ea 20%, #ff2bd6 50%, #7c4dff 100%);
+    }
+    a{color:#000;text-decoration:none;font-weight:1000}
+    .wrap{max-width:980px;margin:14px auto 60px;padding:0 10px}
+    .topbar{
+      border:4px solid #000;
+      background:linear-gradient(90deg,#ffffff 0%,#ffe3fb 35%,#fff8cf 70%,#d9fbff 100%);
+      box-shadow:var(--shadow);
+      padding:10px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{
+      width:54px;height:54px;border:4px solid #000;
+      background:conic-gradient(from 220deg,var(--pink),var(--gold),var(--purple),var(--cyan),var(--pink));
+      box-shadow:var(--shadow);
+    }
+    h1{margin:0;font-size:28px;text-shadow:2px 2px 0 #fff}
+    .sub{font-weight:900;color:#2a0030}
+    .nav{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{
+      display:inline-block;padding:8px 10px;border:3px solid #000;background:#fff;
+      box-shadow:0 0 0 2px #000, 0 0 0 4px #fff, 0 0 0 6px var(--pink);
+    }
+    .card{
+      margin-top:12px;
+      border:5px solid #000;
+      background:var(--paper);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+    h2{
+      margin:18px 0 8px;
+      font-size:18px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      background:#000;color:#fff;
+      padding:6px 8px;
+      border:3px solid #000;
+    }
+    p,li{font-weight:800;line-height:1.6}
+    .tiny{font-size:12px;color:#2a0030}
+    code{background:#000;color:#00ff5a;padding:2px 6px;border:2px solid #000}
+    .footer{
+      margin-top:12px;border:4px solid #000;background:rgba(255,255,255,.92);
+      box-shadow:var(--shadow);padding:10px;font-weight:800;color:#2a0030
+    }
+    ul{margin:8px 0 0 18px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <p class="muted"><a href="/">← Back</a></p>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Privacy Policy</h1>
+          <div class="sub">Big Booty VPN — Verified Screening 24/7 LLC (PA)</div>
+        </div>
+      </div>
+      <div class="nav">
+        <a href="/">Home</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/acceptable-use.html">AUP</a>
+        <a href="mailto:verifiedscreening247@gmail.com">Support</a>
+      </div>
+    </div>
+
     <div class="card">
-      <h1>Privacy Policy</h1>
-      <p class="muted">Effective date: <code>YYYY-MM-DD</code></p>
+      <p class="tiny"><b>Effective date:</b> <code>2026-03-04</code></p>
 
       <p>
-        Big Booty VPN is built to keep your connection private — with a wink, not a leak.
-        Here’s what we collect (and what we don’t).
+        This Privacy Policy explains how <b>Verified Screening 24/7 LLC</b> (“we”, “us”) collects, uses,
+        and shares information when you use the services branded as <b>Big Booty VPN</b> (the “Service”).
       </p>
 
-      <h2>1) What we collect</h2>
-      <p><b>Account:</b> email + internal account IDs.</p>
-      <p><b>Billing:</b> subscription status and payment metadata via our processor; we don’t store full card numbers.</p>
-      <p><b>Diagnostics:</b> limited crash/connection error info to keep the Service stable.</p>
+      <h2>1. Information We Collect</h2>
+      <p><b>A) Account information</b></p>
+      <ul>
+        <li>Email address and internal account identifiers.</li>
+      </ul>
 
-      <h2>2) What we don’t intend to log</h2>
+      <p><b>B) Billing information</b></p>
+      <ul>
+        <li>Subscription status and payment-related metadata processed by our payment provider.</li>
+        <li>We do not store full payment card numbers.</li>
+      </ul>
+
+      <p><b>C) Service and device information (limited)</b></p>
+      <ul>
+        <li>Device/app information (e.g., OS version, app version, identifiers generated by the app).</li>
+        <li>Connection diagnostics and error logs (e.g., connection success/failure, crash logs).</li>
+      </ul>
+
       <p>
-        We do not design the Service to record the websites you visit or the content of your traffic.
-        We’re here to protect your privacy, not to watch your browsing.
+        We do not design the Service to record the specific websites you visit or the content of your traffic.
+        Our VPN servers are not intended to log browsing history.
       </p>
 
-      <h2>3) How we use data</h2>
-      <p>To run the Service, manage subscriptions, prevent fraud/abuse, troubleshoot issues, and provide support.</p>
+      <h2>2. How We Use Information</h2>
+      <ul>
+        <li>Provide and maintain the Service (authentication, device limits, subscription checks).</li>
+        <li>Process subscriptions and prevent fraud/abuse.</li>
+        <li>Troubleshoot issues and improve reliability (diagnostics, crash logs).</li>
+        <li>Provide customer support.</li>
+        <li>Comply with legal obligations.</li>
+      </ul>
 
-      <h2>4) Sharing</h2>
-      <p>We share data only with essential providers (payments, hosting, support tools) and when legally required.</p>
-
-      <h2>5) Retention</h2>
-      <p>We retain account/billing records as required for operations and compliance; diagnostics are kept only as needed.</p>
-
-      <h2>6) Your rights</h2>
-      <p>Depending on your location, you may request access, correction, deletion, or export: <code>support@yourdomain.com</code></p>
-
-      <h2>7) Contact</h2>
-      <p>Privacy: <code>support@yourdomain.com</code></p>
-
-      <p class="muted">
-        Note: If you target EU users, add cookie consent + DPA language as needed.
+      <h2>3. Sharing of Information</h2>
+      <p>We may share information with service providers necessary to operate the Service, such as:</p>
+      <ul>
+        <li>Payment processors.</li>
+        <li>Hosting and infrastructure providers.</li>
+        <li>Customer support tools.</li>
+      </ul>
+      <p>
+        We may also share information if required by law and subject to valid legal process.
+        We do not sell personal information.
       </p>
+
+      <h2>4. Data Retention</h2>
+      <p>
+        We retain account and billing records as needed to provide the Service and comply with legal obligations.
+        We retain diagnostic logs for a limited period and only as needed for troubleshooting, security, and abuse prevention.
+      </p>
+
+      <h2>5. Security</h2>
+      <p>
+        We use reasonable technical and organizational measures to protect information. However, no system is 100% secure.
+      </p>
+
+      <h2>6. Your Choices and Rights</h2>
+      <p>
+        Depending on your location, you may have rights to access, correct, delete, or export your data and to object or restrict
+        certain processing. Requests can be made to <b>verifiedscreening247@gmail.com</b>.
+      </p>
+
+      <h2>7. International Transfers</h2>
+      <p>
+        Your information may be processed in countries different from where you live, including the United States.
+        We take steps to protect data during transfers as required by applicable law.
+      </p>
+
+      <h2>8. Contact</h2>
+      <p>Privacy questions: <b>verifiedscreening247@gmail.com</b></p>
+    </div>
+
+    <div class="footer">
+      <b>Verified Screening 24/7 LLC (PA)</b>
+      <span style="padding:0 6px;">•</span>
+      <a href="/terms.html">Terms</a>
+      <span style="padding:0 6px;">•</span>
+      <a href="/acceptable-use.html">AUP</a>
+      <span style="padding:0 6px;">•</span>
+      Support: <a href="mailto:verifiedscreening247@gmail.com">verifiedscreening247@gmail.com</a>
     </div>
   </div>
 </body>
