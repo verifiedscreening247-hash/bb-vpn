@@ -4,60 +4,192 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Terms — Big Booty VPN</title>
+  <title>Terms of Service — Big Booty VPN</title>
   <style>
-    body{margin:0;background:#07020a;color:#f7e7ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
-    a{color:#ffb000;text-decoration:none}
-    .wrap{max-width:920px;margin:0 auto;padding:28px 18px 70px;}
-    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:18px;line-height:1.65}
-    h1{margin:0 0 10px}
-    h2{margin:22px 0 8px;font-size:18px}
-    .muted{color:rgba(217,182,255,.85)}
-    code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:8px}
+    :root{
+      --pink:#ff2bd6; --purple:#7c4dff; --gold:#ffb000; --cyan:#00e7ff;
+      --bg:#07020A; --ink:#120016; --paper:rgba(255,255,255,.92);
+      --shadow: 0 0 0 3px #000, 0 0 0 6px var(--gold), 0 0 22px rgba(255,43,214,.55);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Comic Sans MS","Comic Sans","Trebuchet MS",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 20px 20px, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/44px 44px,
+        radial-gradient(circle at 10px 30px, rgba(0,231,255,.45) 0 2px, transparent 3px) 0 0/44px 44px,
+        linear-gradient(135deg, #ffb6ff 0%, #ff66ea 20%, #ff2bd6 50%, #7c4dff 100%);
+    }
+    a{color:#000;text-decoration:none;font-weight:1000}
+    .wrap{max-width:980px;margin:14px auto 60px;padding:0 10px}
+    .topbar{
+      border:4px solid #000;
+      background:linear-gradient(90deg,#ffffff 0%,#ffe3fb 35%,#fff8cf 70%,#d9fbff 100%);
+      box-shadow:var(--shadow);
+      padding:10px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{
+      width:54px;height:54px;border:4px solid #000;
+      background:conic-gradient(from 220deg,var(--pink),var(--gold),var(--purple),var(--cyan),var(--pink));
+      box-shadow:var(--shadow);
+    }
+    h1{margin:0;font-size:28px;text-shadow:2px 2px 0 #fff}
+    .sub{font-weight:900;color:#2a0030}
+    .nav{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{
+      display:inline-block;padding:8px 10px;border:3px solid #000;background:#fff;
+      box-shadow:0 0 0 2px #000, 0 0 0 4px #fff, 0 0 0 6px var(--pink);
+    }
+    .card{
+      margin-top:12px;
+      border:5px solid #000;
+      background:var(--paper);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+    h2{
+      margin:18px 0 8px;
+      font-size:18px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      background:#000;color:#fff;
+      padding:6px 8px;
+      border:3px solid #000;
+    }
+    p,li{font-weight:800;line-height:1.6}
+    .tiny{font-size:12px;color:#2a0030}
+    code{background:#000;color:#00ff5a;padding:2px 6px;border:2px solid #000}
+    .footer{
+      margin-top:12px;border:4px solid #000;background:rgba(255,255,255,.92);
+      box-shadow:var(--shadow);padding:10px;font-weight:800;color:#2a0030
+    }
+    ul{margin:8px 0 0 18px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <p class="muted"><a href="/">← Back</a></p>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Terms of Service</h1>
+          <div class="sub">Big Booty VPN — Verified Screening 24/7 LLC (PA)</div>
+        </div>
+      </div>
+      <div class="nav">
+        <a href="/">Home</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/acceptable-use.html">AUP</a>
+        <a href="mailto:verifiedscreening247@gmail.com">Support</a>
+      </div>
+    </div>
+
     <div class="card">
-      <h1>Terms of Service</h1>
-      <p class="muted">Effective date: <code>YYYY-MM-DD</code></p>
+      <p class="tiny"><b>Effective date:</b> <code>2026-03-04</code></p>
 
       <p>
-        Welcome to <b>Big Booty VPN</b> (“Service”). We keep things private and classy-ish:
-        bright vibes, serious rules.
+        These Terms of Service (“Terms”) govern access to and use of the services provided by
+        <b>Verified Screening 24/7 LLC</b> (“Company”, “we”, “us”), including the website and applications
+        branded as <b>Big Booty VPN</b> (collectively, the “Service”).
       </p>
 
-      <h2>1) Account & Eligibility</h2>
-      <p>You must be at least 18 (or the age of majority where you live). You’re responsible for your account and device access.</p>
-
-      <h2>2) Subscription & Billing</h2>
-      <p>The Service is subscription-based. Prices and renewals are shown at checkout. Cancel anytime before renewal.</p>
-
-      <h2>3) Refunds</h2>
-      <p>Refunds (if offered) are described at purchase. Abuse/fraud/chargebacks may void refunds.</p>
-
-      <h2>4) Acceptable Use</h2>
-      <p>Use the Service legally and responsibly. See <a href="/acceptable-use.html">Acceptable Use Policy</a>.</p>
-
-      <h2>5) Service Availability</h2>
-      <p>We don’t guarantee uninterrupted service, specific speeds, or compatibility with every network/device.</p>
-
-      <h2>6) Privacy</h2>
-      <p>We keep minimal account + diagnostics and do not design the Service to log browsing history. Details in <a href="/privacy.html">Privacy Policy</a>.</p>
-
-      <h2>7) Termination</h2>
-      <p>We may suspend/terminate accounts for Terms/AUP violations or to reduce risk and protect the Service.</p>
-
-      <h2>8) Disclaimers & Liability</h2>
-      <p>The Service is provided “as is” and “as available”. To the fullest extent allowed by law, we limit liability for indirect or consequential damages.</p>
-
-      <h2>9) Contact</h2>
-      <p>Support: <code>support@yourdomain.com</code></p>
-
-      <p class="muted">
-        Note: Replace placeholders (dates, company name, jurisdiction) with your real legal details.
+      <h2>1. Eligibility and Account</h2>
+      <p>
+        You must be at least 18 years old (or the age of majority in your jurisdiction) to use the Service.
+        You are responsible for maintaining the confidentiality of your account credentials and all activity
+        under your account. You agree to provide accurate information and keep it up to date.
       </p>
+
+      <h2>2. Subscription, Billing, and Renewals</h2>
+      <p>
+        The Service is offered on a subscription basis. Pricing, billing cycle, and included features are
+        shown at checkout or within your account. If your subscription renews automatically, you authorize
+        us (and our payment processor) to charge applicable renewal fees unless you cancel before renewal.
+        Taxes may apply depending on your location.
+      </p>
+
+      <h2>3. Refunds</h2>
+      <p>
+        Refund eligibility (if any) is described at the point of purchase or in support materials.
+        To request assistance, contact <b>verifiedscreening247@gmail.com</b>.
+        Refunds may be refused in cases of abuse, fraud, or violation of these Terms or the AUP.
+      </p>
+
+      <h2>4. Acceptable Use</h2>
+      <p>
+        You agree to comply with all applicable laws and our Acceptable Use Policy (“AUP”),
+        which is incorporated into these Terms by reference.
+      </p>
+
+      <h2>5. Device Limits and Fair Use</h2>
+      <p>
+        Your plan may limit the number of devices that can use the Service. We may enforce these limits and
+        apply fair-use measures to protect service quality and prevent abuse.
+      </p>
+
+      <h2>6. Service Availability and Changes</h2>
+      <p>
+        We aim to provide a reliable Service, but we do not guarantee uninterrupted availability,
+        specific speeds, or that the Service will work on all networks or devices. We may modify, suspend,
+        or discontinue parts of the Service at any time, including server locations, protocols, or features.
+      </p>
+
+      <h2>7. Privacy</h2>
+      <p>
+        Our Privacy Policy explains what information we collect and how we use it. By using the Service,
+        you consent to our data practices as described in the Privacy Policy.
+      </p>
+
+      <h2>8. Intellectual Property</h2>
+      <p>
+        The Service, including software, branding, and content, is owned by the Company or its licensors and
+        protected by applicable laws. You receive a limited, non-exclusive, non-transferable license to use
+        the Service for personal or internal business purposes, subject to these Terms.
+      </p>
+
+      <h2>9. Termination</h2>
+      <p>
+        You may stop using the Service at any time. We may suspend or terminate access if we reasonably
+        believe you violated these Terms or the AUP, engaged in fraud, or created risk or legal exposure for
+        the Company or others.
+      </p>
+
+      <h2>10. Disclaimers</h2>
+      <p>
+        THE SERVICE IS PROVIDED “AS IS” AND “AS AVAILABLE.” TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE
+        DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+      </p>
+
+      <h2>11. Limitation of Liability</h2>
+      <p>
+        TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COMPANY WILL NOT BE LIABLE FOR INDIRECT, INCIDENTAL,
+        SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR GOODWILL,
+        ARISING OUT OF OR RELATED TO THE SERVICE.
+      </p>
+
+      <h2>12. Governing Law</h2>
+      <p>
+        These Terms are governed by the laws of the Commonwealth of Pennsylvania, without regard to
+        conflict-of-laws principles.
+      </p>
+
+      <h2>13. Contact</h2>
+      <p>
+        Questions about these Terms: <b>verifiedscreening247@gmail.com</b>
+      </p>
+    </div>
+
+    <div class="footer">
+      <b>Verified Screening 24/7 LLC (PA)</b>
+      <span style="padding:0 6px;">•</span>
+      <a href="/privacy.html">Privacy</a>
+      <span style="padding:0 6px;">•</span>
+      <a href="/acceptable-use.html">AUP</a>
+      <span style="padding:0 6px;">•</span>
+      Support: <a href="mailto:verifiedscreening247@gmail.com">verifiedscreening247@gmail.com</a>
     </div>
   </div>
 </body>
