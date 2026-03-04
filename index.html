@@ -7,7 +7,7 @@
   <meta name="description" content="Big Booty VPN — private, secure, and fast. Subscribe NOW!" />
 
   <style>
-    /* ======== RETRO 2000s LOOK ======== */
+    /* ======== 2000s STYLE ======== */
     :root{
       --pink:#ff2bd6;
       --hotpink:#ff55e8;
@@ -25,19 +25,27 @@
       font-family: "Comic Sans MS","Comic Sans", "Trebuchet MS", Arial, sans-serif;
       color:#120016;
 
-      /* garish tiled background (no external images needed) */
       background:
         radial-gradient(circle at 20px 20px, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/44px 44px,
         radial-gradient(circle at 10px 30px, rgba(0,231,255,.45) 0 2px, transparent 3px) 0 0/44px 44px,
         linear-gradient(135deg, #ffb6ff 0%, #ff66ea 20%, #ff2bd6 50%, #7c4dff 100%);
     }
 
-    .wrap{ max-width: 980px; margin: 14px auto 60px; padding: 0 10px; }
+    .wrap{
+      max-width: 980px;
+      margin: 14px auto 60px;
+      padding: 0 10px;
+    }
 
     .sticker{
-      display:inline-block; padding: 6px 10px;
-      border: 3px solid #000; background: #fff; box-shadow: var(--shadow);
-      font-weight: 900; text-transform: uppercase; letter-spacing: .4px;
+      display:inline-block;
+      padding: 6px 10px;
+      border: 3px solid #000;
+      background: #fff;
+      box-shadow: var(--shadow);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .4px;
     }
     .sticker.pink{ background: #ffe1fb; }
     .sticker.gold{ background: #fff1c7; }
@@ -52,7 +60,9 @@
       padding: 10px;
       position: relative;
     }
-    .brand{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .brand{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    }
     .logo{
       width: 58px; height: 58px;
       border: 4px solid #000;
@@ -61,37 +71,61 @@
     }
     .title{ line-height: 1.05; }
     .title h1{
-      margin:0; font-size: 34px; color: #000;
+      margin:0;
+      font-size: 34px;
+      color: #000;
       text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,.25);
     }
-    .title .sub{ font-weight: 800; color: #2a0030; margin-top: 2px; }
+    .title .sub{
+      font-weight: 800;
+      color: #2a0030;
+      margin-top: 2px;
+    }
 
     .nav{
       margin-top: 10px;
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
     }
     .nav a{
-      display:inline-block; padding: 8px 10px;
-      border: 3px solid #000; background:#fff;
+      display:inline-block;
+      padding: 8px 10px;
+      border: 3px solid #000;
+      background:#fff;
       box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff, 0 0 0 6px var(--pink);
-      font-weight: 900; color:#000; text-decoration:none;
+      font-weight: 900;
+      color:#000;
+      text-decoration:none;
     }
     .nav a:hover{ transform: translateY(-1px); }
 
     .marquee{
-      margin-top: 10px; border: 4px dashed #000; background: #fff;
-      box-shadow: var(--shadow); padding: 8px 0; overflow:hidden;
+      margin-top: 10px;
+      border: 4px dashed #000;
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 8px 0;
+      overflow:hidden;
     }
     .marquee .track{
-      display:inline-block; white-space: nowrap; will-change: transform;
+      display:inline-block;
+      white-space: nowrap;
+      will-change: transform;
       animation: scroll 16s linear infinite;
-      font-weight: 900; font-size: 18px; color:#000;
+      font-weight: 900;
+      font-size: 18px;
+      color:#000;
     }
     @keyframes scroll {
       0% { transform: translateX(100%); }
       100% { transform: translateX(-120%); }
     }
-    .spark{ color: var(--pink); text-shadow: 1px 1px 0 #000; }
+    .spark{
+      color: var(--pink);
+      text-shadow: 1px 1px 0 #000;
+    }
 
     .grid{
       display:grid;
@@ -119,7 +153,12 @@
       padding: 6px 8px;
       border: 3px solid #000;
     }
-    .tiny{ font-size: 12px; font-weight: 800; color: #2a0030; line-height: 1.45; }
+    .tiny{
+      font-size: 12px;
+      font-weight: 800;
+      color: #2a0030;
+      line-height: 1.45;
+    }
 
     .cta{
       display:block;
@@ -150,7 +189,10 @@
       text-shadow: 2px 2px 0 #fff;
       margin: 2px 0 4px;
     }
-    .features li{ margin: 6px 0; font-weight: 900; }
+    .features li{
+      margin: 6px 0;
+      font-weight: 900;
+    }
 
     .hero{
       border: 5px solid #000;
@@ -171,9 +213,15 @@
       line-height: 1.5;
       color:#2a0030;
     }
-    .badges{ display:flex; gap:8px; flex-wrap:wrap; margin: 10px 0; }
+    .badges{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 10px 0;
+    }
 
-    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .btnrow{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+    }
     .btn{
       display:inline-block;
       padding: 10px 12px;
@@ -211,37 +259,6 @@
       letter-spacing: 2px;
       font-weight: 1000;
     }
-
-    /* ===== Mascot gallery ===== */
-    .mascot-grid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    @media (max-width: 980px){
-      .mascot-grid{ grid-template-columns: 1fr; }
-    }
-    .mascot{
-      border: 4px solid #000;
-      background: rgba(255,255,255,.96);
-      box-shadow: 0 0 0 3px #000, 0 0 0 6px var(--hotpink);
-      padding: 10px;
-    }
-    .mascot .cap{
-      margin-top:8px;
-      font-weight:1000;
-      color:#2a0030;
-      font-size:12px;
-      line-height:1.35;
-    }
-    .mascot svg{
-      width:100%;
-      height:auto;
-      display:block;
-      border:3px solid #000;
-      background: linear-gradient(180deg, #fff, #ffe1fb 60%, #fff8cf);
-    }
   </style>
 </head>
 
@@ -257,14 +274,13 @@
         <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
           <span class="sticker gold">WIREGUARD POWER</span>
           <span class="sticker cyan">5 DEVICES</span>
-          <span class="counter" title="totally legit visitor counter">000042069</span>
+          <span class="counter" title="visitor counter">000042069</span>
         </div>
       </div>
 
       <div class="nav">
         <a href="#buy">BUY NOW</a>
         <a href="#features">FEATURES</a>
-        <a href="#mascots">MASCOTS</a>
         <a href="/privacy.html">PRIVACY</a>
         <a href="/terms.html">TERMS</a>
         <a href="/acceptable-use.html">AUP</a>
@@ -283,9 +299,8 @@
     <div class="grid">
       <!-- LEFT SIDEBAR -->
       <aside class="panel">
-        <h2>Hot Deals</h2>
+        <h2>Plans</h2>
 
-        <!-- Monthly -->
         <div class="pricebox">
           <div class="tiny">Monthly subscription</div>
           <div class="price">$6.96</div>
@@ -296,15 +311,11 @@
           </div>
         </div>
 
-        <!-- Yearly (NEW) -->
         <div class="pricebox" style="margin-top:12px; background:#fff1c7;">
           <div class="tiny">Yearly subscription</div>
           <div class="price">$69.69</div>
-          <div class="tiny">Best value. Renew yearly.</div>
+          <div class="tiny">Renew yearly.</div>
           <a class="cta" href="https://buy.stripe.com/00wcN7dxda9veqM5zZ1sQ02" target="_blank" rel="noopener">YEARLY CHECKOUT ➜</a>
-          <div class="tiny" style="margin-top:8px;">
-            (Yearly link)
-          </div>
         </div>
 
         <div class="badges" style="margin-top:12px;">
@@ -356,179 +367,6 @@
           </div>
         </div>
 
-        <!-- Mascots (NEW) -->
-        <div class="panel" id="mascots" style="margin-top:12px; background:rgba(255,255,255,.96);">
-          <h2>Mascots (illustrations)</h2>
-          <div class="tiny">
-            Original SVG illustrations (adult characters), modest swimwear, no explicit content.
-          </div>
-
-          <div class="mascot-grid">
-            <!-- Mascot 1 -->
-            <div class="mascot">
-              <svg viewBox="0 0 300 260" role="img" aria-label="Anime-style adult catgirl mascot in modest swimsuit">
-                <defs>
-                  <linearGradient id="g1" x1="0" x2="1">
-                    <stop offset="0" stop-color="#ffb000"/>
-                    <stop offset="1" stop-color="#ff2bd6"/>
-                  </linearGradient>
-                </defs>
-
-                <!-- background sparkles -->
-                <circle cx="35" cy="35" r="6" fill="#00e7ff" stroke="#000" stroke-width="3"/>
-                <circle cx="265" cy="45" r="6" fill="#7c4dff" stroke="#000" stroke-width="3"/>
-                <circle cx="240" cy="210" r="6" fill="#ff2bd6" stroke="#000" stroke-width="3"/>
-
-                <!-- hair -->
-                <path d="M85,150 C70,95 95,55 150,55 C205,55 230,95 215,150 C200,125 175,118 150,118 C125,118 100,125 85,150 Z"
-                      fill="#2a0030" stroke="#000" stroke-width="4"/>
-
-                <!-- ears -->
-                <path d="M110,65 L90,30 L125,50 Z" fill="#2a0030" stroke="#000" stroke-width="4"/>
-                <path d="M190,65 L210,30 L175,50 Z" fill="#2a0030" stroke="#000" stroke-width="4"/>
-                <path d="M112,60 L100,40 L120,52 Z" fill="#ff66ea" opacity=".9"/>
-                <path d="M188,60 L200,40 L180,52 Z" fill="#ff66ea" opacity=".9"/>
-
-                <!-- head -->
-                <ellipse cx="150" cy="115" rx="55" ry="50" fill="#ffe1fb" stroke="#000" stroke-width="4"/>
-
-                <!-- eyes -->
-                <ellipse cx="130" cy="115" rx="10" ry="8" fill="#000"/>
-                <ellipse cx="170" cy="115" rx="10" ry="8" fill="#000"/>
-                <circle cx="126" cy="112" r="2" fill="#fff"/>
-                <circle cx="166" cy="112" r="2" fill="#fff"/>
-
-                <!-- mouth -->
-                <path d="M140,135 C147,140 153,140 160,135" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-                <!-- body -->
-                <path d="M110,245 C105,190 120,155 150,155 C180,155 195,190 190,245 Z"
-                      fill="url(#g1)" stroke="#000" stroke-width="4"/>
-
-                <!-- modest one-piece details -->
-                <path d="M150,155 L150,245" stroke="#000" stroke-width="4" opacity=".4"/>
-                <path d="M120,190 C140,175 160,175 180,190" stroke="#000" stroke-width="4" fill="none" opacity=".6"/>
-
-                <!-- tail -->
-                <path d="M210,210 C250,200 255,235 220,245" fill="none" stroke="#2a0030" stroke-width="8" stroke-linecap="round"/>
-                <path d="M210,210 C250,200 255,235 220,245" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
-
-                <!-- label -->
-                <rect x="18" y="220" width="130" height="26" fill="#fff" stroke="#000" stroke-width="4"/>
-                <text x="28" y="239" font-size="12" font-weight="900" font-family="Comic Sans MS, Arial" fill="#000">
-                  Mascot A • Adult
-                </text>
-              </svg>
-              <div class="cap">Mascot A (adult). Modest one-piece. Decorative/brand art only.</div>
-            </div>
-
-            <!-- Mascot 2 -->
-            <div class="mascot">
-              <svg viewBox="0 0 300 260" role="img" aria-label="Anime-style adult catgirl mascot in modest swimsuit">
-                <defs>
-                  <linearGradient id="g2" x1="0" x2="1">
-                    <stop offset="0" stop-color="#7c4dff"/>
-                    <stop offset="1" stop-color="#00e7ff"/>
-                  </linearGradient>
-                </defs>
-
-                <rect x="18" y="18" width="264" height="224" fill="rgba(255,255,255,.35)" stroke="#000" stroke-width="4"/>
-                <circle cx="65" cy="60" r="6" fill="#ffb000" stroke="#000" stroke-width="3"/>
-                <circle cx="245" cy="80" r="6" fill="#ff2bd6" stroke="#000" stroke-width="3"/>
-
-                <!-- hair -->
-                <path d="M70,150 C60,85 95,40 150,40 C205,40 240,85 230,150 C210,120 185,108 150,108 C115,108 90,120 70,150 Z"
-                      fill="#000" stroke="#000" stroke-width="4"/>
-
-                <!-- ears -->
-                <path d="M108,55 L90,25 L125,42 Z" fill="#000" stroke="#000" stroke-width="4"/>
-                <path d="M192,55 L210,25 L175,42 Z" fill="#000" stroke="#000" stroke-width="4"/>
-                <path d="M110,52 L100,34 L120,44 Z" fill="#d9fbff" opacity=".9"/>
-                <path d="M190,52 L200,34 L180,44 Z" fill="#d9fbff" opacity=".9"/>
-
-                <!-- head -->
-                <ellipse cx="150" cy="110" rx="55" ry="50" fill="#fff8cf" stroke="#000" stroke-width="4"/>
-
-                <!-- eyes -->
-                <ellipse cx="132" cy="110" rx="10" ry="8" fill="#000"/>
-                <ellipse cx="168" cy="110" rx="10" ry="8" fill="#000"/>
-                <circle cx="128" cy="107" r="2" fill="#fff"/>
-                <circle cx="164" cy="107" r="2" fill="#fff"/>
-
-                <!-- mouth -->
-                <path d="M145,132 C150,136 155,136 160,132" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-                <!-- body -->
-                <path d="M112,245 C104,190 120,150 150,150 C180,150 196,190 188,245 Z"
-                      fill="url(#g2)" stroke="#000" stroke-width="4"/>
-                <path d="M120,180 C150,160 150,160 180,180" stroke="#000" stroke-width="4" fill="none" opacity=".55"/>
-
-                <!-- tail -->
-                <path d="M95,210 C55,195 55,240 90,245" fill="none" stroke="#000" stroke-width="8" stroke-linecap="round"/>
-                <path d="M95,210 C55,195 55,240 90,245" fill="none" stroke="#ff2bd6" stroke-width="4" stroke-linecap="round"/>
-
-                <rect x="18" y="220" width="130" height="26" fill="#fff" stroke="#000" stroke-width="4"/>
-                <text x="28" y="239" font-size="12" font-weight="900" font-family="Comic Sans MS, Arial" fill="#000">
-                  Mascot B • Adult
-                </text>
-              </svg>
-              <div class="cap">Mascot B (adult). Modest swimwear. Decorative/brand art only.</div>
-            </div>
-
-            <!-- Mascot 3 -->
-            <div class="mascot">
-              <svg viewBox="0 0 300 260" role="img" aria-label="Anime-style adult catgirl mascot in modest swimsuit">
-                <defs>
-                  <linearGradient id="g3" x1="0" x2="1">
-                    <stop offset="0" stop-color="#ff2bd6"/>
-                    <stop offset="1" stop-color="#ffb000"/>
-                  </linearGradient>
-                </defs>
-
-                <path d="M20,210 C70,190 110,210 150,200 C190,190 230,210 280,190"
-                      stroke="#000" stroke-width="4" fill="none" opacity=".35"/>
-
-                <!-- hair -->
-                <path d="M75,150 C62,90 92,50 150,50 C208,50 238,90 225,150 C205,125 180,114 150,114 C120,114 95,125 75,150 Z"
-                      fill="#2a0030" stroke="#000" stroke-width="4"/>
-
-                <!-- ears -->
-                <path d="M112,65 L95,35 L130,50 Z" fill="#2a0030" stroke="#000" stroke-width="4"/>
-                <path d="M188,65 L205,35 L170,50 Z" fill="#2a0030" stroke="#000" stroke-width="4"/>
-                <path d="M114,62 L104,44 L124,54 Z" fill="#fff8cf" opacity=".95"/>
-                <path d="M186,62 L196,44 L176,54 Z" fill="#fff8cf" opacity=".95"/>
-
-                <!-- head -->
-                <ellipse cx="150" cy="115" rx="55" ry="50" fill="#d9fbff" stroke="#000" stroke-width="4"/>
-
-                <!-- eyes -->
-                <ellipse cx="130" cy="115" rx="10" ry="8" fill="#000"/>
-                <ellipse cx="170" cy="115" rx="10" ry="8" fill="#000"/>
-                <circle cx="126" cy="112" r="2" fill="#fff"/>
-                <circle cx="166" cy="112" r="2" fill="#fff"/>
-
-                <!-- mouth -->
-                <path d="M142,136 C148,141 152,141 158,136" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round"/>
-
-                <!-- body -->
-                <path d="M110,245 C103,192 121,154 150,154 C179,154 197,192 190,245 Z"
-                      fill="url(#g3)" stroke="#000" stroke-width="4"/>
-                <path d="M125,210 C140,205 160,205 175,210" stroke="#000" stroke-width="4" fill="none" opacity=".55"/>
-
-                <!-- tail -->
-                <path d="M205,205 C230,175 265,195 240,225" fill="none" stroke="#7c4dff" stroke-width="8" stroke-linecap="round"/>
-                <path d="M205,205 C230,175 265,195 240,225" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
-
-                <rect x="18" y="220" width="130" height="26" fill="#fff" stroke="#000" stroke-width="4"/>
-                <text x="28" y="239" font-size="12" font-weight="900" font-family="Comic Sans MS, Arial" fill="#000">
-                  Mascot C • Adult
-                </text>
-              </svg>
-              <div class="cap">Mascot C (adult). Modest one-piece. Decorative/brand art only.</div>
-            </div>
-          </div>
-        </div>
-
         <div class="panel" style="margin-top:12px; background:rgba(255,255,255,.96);">
           <h2>FAQ</h2>
           <div class="tiny">
@@ -546,10 +384,9 @@
 
       <!-- RIGHT SIDEBAR -->
       <aside class="panel">
-        <h2>Retro Tools</h2>
+        <h2>Downloads</h2>
         <div class="tiny">
-          <b>Downloads:</b> (coming soon)<br/>
-          Windows • macOS • iOS • Android
+          Windows • macOS • iOS • Android (coming soon)
         </div>
 
         <div class="panel" style="margin-top:10px; background:rgba(255,255,255,.96);">
@@ -558,12 +395,12 @@
             EU: <span class="sticker cyan">ONLINE</span><br/><br/>
             US-East: <span class="sticker cyan">ONLINE</span><br/><br/>
             Singapore: <span class="sticker gold">ONLINE*</span><br/>
-            <span class="tiny">*sometimes extra spicy ping</span>
+            <span class="tiny">*sometimes extra ping</span>
           </div>
         </div>
 
         <div class="panel" style="margin-top:10px; background:rgba(255,255,255,.96);">
-          <h2>Legal Corner</h2>
+          <h2>Legal</h2>
           <div class="tiny">
             Verified Screening 24/7 LLC (PA).<br/>
             Support: <b>verifiedscreening247@gmail.com</b><br/>
@@ -578,7 +415,7 @@
 
     <div class="footer">
       <div>
-        <b>Big Booty VPN</b> — retro vibes, modern tunnels.
+        <b>Big Booty VPN</b> — modern tunnels.
         <span class="sep">•</span>
         Support: <a href="mailto:verifiedscreening247@gmail.com">verifiedscreening247@gmail.com</a>
         <span class="sep">•</span>
