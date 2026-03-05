@@ -52,12 +52,25 @@
       box-shadow: var(--shadow);
       padding: 10px;
       position: relative;
+
+      /* ✅ добавлено: центрируем всё внутри topbar */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     .brand{
       display:flex;
       align-items:flex-start;
       gap:12px;
       flex-wrap:wrap;
+
+      /* ✅ добавлено: делаем верхний блок в колонку и по центру */
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .site-logo{
@@ -71,7 +84,14 @@
       margin: 0 auto 8px auto; /* centered */
     }
 
-    .title{ line-height: 1.05; }
+    .title{
+      line-height: 1.05;
+
+      /* ✅ добавлено: центрируем содержимое title */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
     .title h1{
       margin:0;
       font-size: 34px;
@@ -84,12 +104,24 @@
       margin-top: 2px;
     }
 
+    /* ✅ добавлено: новый класс вместо inline-style */
+    .badges-top{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+
     .nav{
       margin-top: 10px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
+
+      /* ✅ добавлено: центрируем меню */
+      justify-content: center;
     }
     .nav a{
       display:inline-block;
@@ -265,7 +297,8 @@
           <div class="sub">Serious privacy. Serious encryption. (No peeking 👀)</div>
         </div>
 
-        <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <!-- ✅ заменено: без margin-left:auto, теперь центрируется -->
+        <div class="badges-top">
           <span class="sticker gold">WIREGUARD POWER</span>
           <span class="sticker cyan">5 DEVICES</span>
           <span class="counter" title="visitor counter">000042069</span>
