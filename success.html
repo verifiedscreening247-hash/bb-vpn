@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Success — Big Booty VPN</title>
+<body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
+  <h1>Payment successful ✅</h1>
+  <p>Enter a device name (examples: <b>iphone</b>, <b>laptop</b>, <b>tablet</b>). Then download your config.</p>
+
+  <label>Device name</label><br/>
+  <input id="device" placeholder="iphone"
+    style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
+  <button id="go"
+    style="padding:10px 14px;border-radius:10px;border:0;background:#ff2bd6;color:#000;font-weight:900;margin-left:8px;cursor:pointer">
+    Generate & Download
+  </button>
+
+  <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
+
+  <script>
+    const out = document.getElementById("out");
+    const params = new URLSearchParams(location.search);
+    const sessionId = params.get("session_id");
+
+    if (!sessionId) out.textContent = "Missing session_id. Please return from Stripe checkout.";
+
+    document.getElementById("go").onclick = async () => {
+      const device = document.getElementById("device").value.trim();
+      out.textContent = "Working...";
+
+      const r = await fetch("/api/provision", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ session_id: sessionId, device })
+      });
+
+      if (!r.ok) {
+        const err = await r.text();
+        out.textContent = "❌ Error:\n" + err;
+        return;
+      }
+
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bbvpn-${device}.conf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+      out.textContent = "✅ Download started. Import the .conf into the WireGuard app.";
+    };
+  </script>
+
+  <p style="margin-top:16px;opacity:.9">
+    WireGuard app → <b>Add tunnel</b> → <b>Import from file</b>.
+  </p>
+</body>
