@@ -2,6 +2,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Success — Big Booty VPN</title>
+
 <body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
   <h1>Payment successful ✅</h1>
   <p>Enter a device name (examples: <b>iphone</b>, <b>laptop</b>, <b>tablet</b>). Then download your config.</p>
@@ -18,39 +19,66 @@
 
   <script>
     const out = document.getElementById("out");
+    const btn = document.getElementById("go");
+    const deviceEl = document.getElementById("device");
     const params = new URLSearchParams(location.search);
     const sessionId = params.get("session_id");
 
     if (!sessionId) out.textContent = "Missing session_id. Please return from Stripe checkout.";
 
-    document.getElementById("go").onclick = async () => {
-      const device = document.getElementById("device").value.trim();
-      out.textContent = "Working...";
+    function cleanDeviceName(s) {
+      return (s || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 24);
+    }
 
-      const r = await fetch("/api/provision", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ session_id: sessionId, device })
-      });
+    btn.onclick = async () => {
+      if (!sessionId) return;
 
-      if (!r.ok) {
-        const err = await r.text();
-        out.textContent = "❌ Error:\n" + err;
+      const device = cleanDeviceName(deviceEl.value);
+      if (!device) {
+        out.textContent = "❌ Please enter a device name (letters/numbers/_/-).";
         return;
       }
 
-      const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
+      btn.disabled = true;
+      btn.style.opacity = "0.6";
+      out.textContent = "Working...";
 
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `bbvpn-${device}.conf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      try {
+        const r = await fetch("/api/provision", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ session_id: sessionId, device })
+        });
 
-      URL.revokeObjectURL(url);
-      out.textContent = "✅ Download started. Import the .conf into the WireGuard app.";
+        if (!r.ok) {
+          const err = await r.text();
+          out.textContent = "❌ Error:\n" + err;
+          return;
+        }
+
+        const blob = await r.blob();
+        out.textContent = `✅ Received ${blob.size} bytes. Starting download...`;
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `bbvpn-${device}.conf`;
+        document.body.appendChild(a);
+        a.click();
+
+        // IMPORTANT: don't revoke immediately (can cause 0-byte downloads)
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          a.remove();
+        }, 30000);
+
+        out.textContent += "\n✅ Import the .conf into the WireGuard app.";
+      } catch (e) {
+        out.textContent = "❌ Error:\n" + (e?.message || String(e));
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      }
     };
   </script>
 
