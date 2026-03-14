@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>New device link — Big Booty VPN</title>
+
+<body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
+  <h1>Send me a new link for a new device</h1>
+  <p>Enter your purchase email. We’ll send a fresh one-time activation link.</p>
+
+  <label>Email</label><br/>
+  <input id="email" placeholder="you@example.com"
+    style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:320px">
+
+  <button id="go"
+    style="padding:10px 14px;border-radius:10px;border:0;background:#ff2bd6;color:#000;font-weight:900;margin-left:8px;cursor:pointer">
+    Send me a link
+  </button>
+
+  <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
+
+  <script>
+    const out = document.getElementById("out");
+    const btn = document.getElementById("go");
+    const emailEl = document.getElementById("email");
+
+    function cleanEmail(s){ return (s||"").trim().toLowerCase(); }
+
+    btn.onclick = async () => {
+      const email = cleanEmail(emailEl.value);
+      if (!email || !email.includes("@")) {
+        out.textContent = "❌ Please enter a valid email.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.style.opacity = "0.6";
+      out.textContent = "Working...";
+
+      try {
+        const r = await fetch("/api/request-new-link", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ email })
+        });
+
+        const txt = await r.text();
+        if (!r.ok) {
+          out.textContent = "❌ Error:\n" + txt;
+          return;
+        }
+
+        const data = JSON.parse(txt);
+        out.textContent =
+          `✅ Sent! Check your email.\n\nDevice slots left: ${data.left}\n\nIf you don’t see it, check Spam/Promotions.`;
+      } catch (e) {
+        out.textContent = "❌ Error:\n" + (e?.message || String(e));
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      }
+    };
+  </script>
+
+  <p style="margin-top:16px;opacity:.9">
+    Tip: your activation link is one-time. If it expires/you used it already, just request a new one here.
+  </p>
+</body>
