@@ -9,8 +9,9 @@
     <label>Server</label><br/>
   <select id="server"
     style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
-    <option value="eu">EU (Amsterdam)</option>
     <option value="us">US (New York)</option>
+    <option value="eu">EU (Amsterdam)</option>
+    
   </select>
 
   <div style="height:12px"></div>
@@ -31,7 +32,7 @@
     const token = params.get("t");
     const serverEl = document.getElementById("server");
     const savedServer = localStorage.getItem("bbvpn_server");
-    if (savedServer) serverEl.value = savedServer;
+    serverEl.value = savedServer ? savedServer : "us";
     serverEl.onchange = () => localStorage.setItem("bbvpn_server", serverEl.value);
 
     if (!token) out.textContent = "Missing token. Open the link from your email.";
