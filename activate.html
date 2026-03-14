@@ -6,7 +6,15 @@
 <body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
   <h1>Activate your VPN</h1>
   <p>Enter a device name (examples: <b>iphone</b>, <b>laptop</b>, <b>tablet</b>).</p>
+    <label>Server</label><br/>
+  <select id="server"
+    style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
+    <option value="eu">EU (Amsterdam)</option>
+    <option value="us">US (New York)</option>
+  </select>
 
+  <div style="height:12px"></div>
+  
   <label>Device name</label><br/>
   <input id="device" placeholder="iphone"
     style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
@@ -21,6 +29,10 @@
     const out = document.getElementById("out");
     const params = new URLSearchParams(location.search);
     const token = params.get("t");
+    const serverEl = document.getElementById("server");
+    const savedServer = localStorage.getItem("bbvpn_server");
+    if (savedServer) serverEl.value = savedServer;
+    serverEl.onchange = () => localStorage.setItem("bbvpn_server", serverEl.value);
 
     if (!token) out.textContent = "Missing token. Open the link from your email.";
 
@@ -31,7 +43,7 @@
       const r = await fetch("/api/activate", {
         method: "POST",
         headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ token, device })
+        body: JSON.stringify({ token, device, server: serverEl.value })
       });
 
       if (!r.ok) {
@@ -46,7 +58,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bbvpn-${device}.conf`;
+      a.download = `bbvpn-${serverEl.value}-${device}.conf`;
       document.body.appendChild(a);
       a.click();
 
