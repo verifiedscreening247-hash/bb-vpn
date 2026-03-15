@@ -5,17 +5,18 @@
 
 <body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
   <h1>Activate your VPN</h1>
-  <p>Enter a device name (examples: <b>iphone</b>, <b>laptop</b>, <b>tablet</b>).</p>
-    <label>Server</label><br/>
+  <p>Pick a server + device name. Then download your WireGuard config.</p>
+
+  <label>Server</label><br/>
   <select id="server"
     style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
     <option value="us">US (New York)</option>
     <option value="eu">EU (Amsterdam)</option>
-    
+    <option value="sg">SG (Singapore)</option>
   </select>
 
   <div style="height:12px"></div>
-  
+
   <label>Device name</label><br/>
   <input id="device" placeholder="iphone"
     style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
@@ -30,6 +31,7 @@
     const out = document.getElementById("out");
     const params = new URLSearchParams(location.search);
     const token = params.get("t");
+
     const serverEl = document.getElementById("server");
     const savedServer = localStorage.getItem("bbvpn_server");
     serverEl.value = savedServer ? savedServer : "us";
@@ -39,12 +41,15 @@
 
     document.getElementById("go").onclick = async () => {
       const device = document.getElementById("device").value.trim();
+      const region = serverEl.value;
+
       out.textContent = "Working...";
 
       const r = await fetch("/api/activate", {
         method: "POST",
         headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ token, device, server: serverEl.value })
+        // IMPORTANT: Worker expects `region`, not `server`
+        body: JSON.stringify({ token, device, region })
       });
 
       if (!r.ok) {
@@ -59,15 +64,15 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bbvpn-${serverEl.value}-${device}.conf`;
+      a.download = `bbvpn-${region}-${device}.conf`;
       document.body.appendChild(a);
       a.click();
 
-      // IMPORTANT: don't revoke immediately, can produce 0-byte downloads
+      // IMPORTANT: don't revoke immediately, can produce 0-byte downloads in some browsers
       setTimeout(() => {
         URL.revokeObjectURL(url);
         a.remove();
-        out.textContent += "\n✅ If the download didn’t start, try again with a new link.";
+        out.textContent += "\n✅ Import the .conf into WireGuard (Add tunnel → Import from file).";
       }, 30000);
     };
   </script>
