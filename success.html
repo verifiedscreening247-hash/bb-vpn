@@ -1,88 +1,156 @@
 <!doctype html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Success — Big Booty VPN</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Success — Big Booty VPN</title>
+  <meta name="robots" content="noindex,nofollow" />
 
-<body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
-  <h1>Payment successful ✅</h1>
-  <p>Enter a device name (examples: <b>iphone</b>, <b>laptop</b>, <b>tablet</b>). Then download your config.</p>
+  <style>
+    :root{
+      --pink:#ff2bd6;
+      --gold:#ffb000;
+      --cyan:#00e7ff;
+      --bg:#07020A;
+      --card:#0f0714;
+      --text:#f7e7ff;
+      --muted:#cdb3dd;
+      --border: rgba(255,255,255,.14);
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at 20px 20px, rgba(255,255,255,.07) 0 2px, transparent 3px) 0 0/44px 44px,
+                  radial-gradient(circle at 10px 30px, rgba(0,231,255,.08) 0 2px, transparent 3px) 0 0/44px 44px,
+                  linear-gradient(135deg, #2a0030 0%, #120016 45%, #07020A 100%);
+      color: var(--text);
+      padding: 28px 14px 40px;
+    }
+    .wrap{ max-width: 780px; margin: 0 auto; }
+    .card{
+      background: rgba(15,7,20,.92);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 18px;
+      box-shadow: 0 0 0 2px #000, 0 0 0 4px rgba(255,43,214,.35);
+    }
+    h1{
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: .2px;
+    }
+    p{ margin: 10px 0; color: var(--muted); line-height: 1.55; }
+    .badge{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      color:#000;
+      background: linear-gradient(90deg, var(--gold), var(--pink));
+      margin-bottom: 10px;
+    }
+    .steps{
+      margin: 14px 0 6px;
+      padding-left: 18px;
+      color: var(--text);
+    }
+    .steps li{ margin: 10px 0; }
+    .btnrow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    a.btn{
+      display:inline-block;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight: 900;
+      border: 1px solid var(--border);
+      background: #000;
+      color: var(--text);
+    }
+    a.btn.primary{
+      background: var(--pink);
+      color:#000;
+      border: 0;
+    }
+    .tiny{
+      margin-top: 14px;
+      font-size: 12px;
+      color: #bfa0d2;
+      opacity: .95;
+    }
+    code{
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 2px 6px;
+      border-radius: 8px;
+      color: #fff;
+    }
+    .alert{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.25);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+    }
+  </style>
+</head>
 
-  <label>Device name</label><br/>
-  <input id="device" placeholder="iphone"
-    style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
-  <button id="go"
-    style="padding:10px 14px;border-radius:10px;border:0;background:#ff2bd6;color:#000;font-weight:900;margin-left:8px;cursor:pointer">
-    Generate & Download
-  </button>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="badge">Payment successful ✅</div>
+      <h1>You’re in.</h1>
+      <p>
+        Next step: check your email for an <b>Activate</b> link. That link lets you generate your WireGuard config
+        for your device and download it.
+      </p>
 
-  <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
+      <ol class="steps">
+        <li>
+          Open your inbox and find an email from <code>emotional_support@bb-vpn.com</code> (or Resend).
+          <br/>If you don’t see it, check <b>Spam</b> / <b>Promotions</b>.
+        </li>
+        <li>
+          Click the <b>Activate</b> link in the email.
+        </li>
+        <li>
+          Install the <b>WireGuard</b> app on your device (if you don’t have it yet).
+        </li>
+        <li>
+          On the Activate page: choose a server, enter a device name, and download the <code>.conf</code>.
+        </li>
+        <li>
+          In WireGuard: <b>Add tunnel</b> → <b>Import from file</b> → select the downloaded <code>.conf</code>,
+          then toggle it <b>ON</b>.
+        </li>
+      </ol>
+
+      <div class="btnrow">
+        <a class="btn primary" href="/newlink.html">Request a new device link</a>
+        <a class="btn" href="mailto:verifiedscreening247@gmail.com?subject=Big%20Booty%20VPN%20Support">Contact support</a>
+      </div>
+
+      <div class="alert" id="sid"></div>
+
+      <div class="tiny">
+        Tip: If you paid and still didn’t get an email after a few minutes, contact support with your checkout email.
+      </div>
+    </div>
+  </div>
 
   <script>
-    const out = document.getElementById("out");
-    const btn = document.getElementById("go");
-    const deviceEl = document.getElementById("device");
+    // Optional: show session_id for support troubleshooting (no API calls)
+    const el = document.getElementById("sid");
     const params = new URLSearchParams(location.search);
-    const sessionId = params.get("session_id");
-
-    if (!sessionId) out.textContent = "Missing session_id. Please return from Stripe checkout.";
-
-    function cleanDeviceName(s) {
-      return (s || "").trim().replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 24);
-    }
-
-    btn.onclick = async () => {
-      if (!sessionId) return;
-
-      const device = cleanDeviceName(deviceEl.value);
-      if (!device) {
-        out.textContent = "❌ Please enter a device name (letters/numbers/_/-).";
-        return;
-      }
-
-      btn.disabled = true;
-      btn.style.opacity = "0.6";
-      out.textContent = "Working...";
-
-      try {
-        const r = await fetch("/api/provision", {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ session_id: sessionId, device })
-        });
-
-        if (!r.ok) {
-          const err = await r.text();
-          out.textContent = "❌ Error:\n" + err;
-          return;
-        }
-
-        const blob = await r.blob();
-        out.textContent = `✅ Received ${blob.size} bytes. Starting download...`;
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `bbvpn-${device}.conf`;
-        document.body.appendChild(a);
-        a.click();
-
-        // IMPORTANT: don't revoke immediately (can cause 0-byte downloads)
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-          a.remove();
-        }, 30000);
-
-        out.textContent += "\n✅ Import the .conf into the WireGuard app.";
-      } catch (e) {
-        out.textContent = "❌ Error:\n" + (e?.message || String(e));
-      } finally {
-        btn.disabled = false;
-        btn.style.opacity = "1";
-      }
-    };
+    const sid = params.get("session_id");
+    el.innerHTML = sid
+      ? `Support info: your checkout session is <code>${sid.replace(/</g,"&lt;")}</code>.`
+      : `Support info: if you need help, tell us the email you used at checkout.`;
   </script>
-
-  <p style="margin-top:16px;opacity:.9">
-    WireGuard app → <b>Add tunnel</b> → <b>Import from file</b>.
-  </p>
 </body>
+</html>
