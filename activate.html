@@ -5,79 +5,91 @@
 
 <body style="font-family:system-ui;background:#07020A;color:#f7e7ff;padding:24px">
   <h1>Activate your VPN</h1>
-  <p>Pick a server + device name. Then download your WireGuard config.</p>
-
-  <label>Server</label><br/>
-  <select id="server"
-    style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
-    <option value="us">US (New York)</option>
-    <option value="eu">EU (Amsterdam)</option>
-    <option value="sg">SG (Singapore)</option>
-  </select>
-
-  <div style="height:12px"></div>
+  <p>Enter a device name once — we’ll generate configs for <b>EU / US / SG</b>.</p>
 
   <label>Device name</label><br/>
-  <input id="device" placeholder="e.g. basement pc for g00ning"
+  <input id="device" placeholder="" autocomplete="off"
     style="padding:10px;border-radius:10px;border:1px solid #fff2;background:#000;color:#fff;min-width:260px">
   <button id="go"
     style="padding:10px 14px;border-radius:10px;border:0;background:#ff2bd6;color:#000;font-weight:900;margin-left:8px;cursor:pointer">
-    Generate & Download
+    Generate configs
   </button>
+
+  <div id="dl" style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;"></div>
 
   <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
 
   <script>
     const out = document.getElementById("out");
+    const dl = document.getElementById("dl");
     const params = new URLSearchParams(location.search);
     const token = params.get("t");
 
-    const serverEl = document.getElementById("server");
-    const savedServer = localStorage.getItem("bbvpn_server");
-    serverEl.value = savedServer ? savedServer : "us";
-    serverEl.onchange = () => localStorage.setItem("bbvpn_server", serverEl.value);
-
     if (!token) out.textContent = "Missing token. Open the link from your email.";
 
-    document.getElementById("go").onclick = async () => {
-      const device = document.getElementById("device").value.trim();
-      const region = serverEl.value;
+    function mkBtn(label, onClick){
+      const b = document.createElement("button");
+      b.textContent = label;
+      b.style.cssText = "padding:10px 12px;border-radius:12px;border:0;cursor:pointer;font-weight:900;background:#00e7ff;color:#000";
+      b.onclick = onClick;
+      return b;
+    }
 
-      out.textContent = "Working...";
-
-      const r = await fetch("/api/activate", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        // IMPORTANT: Worker expects `region`, not `server`
-        body: JSON.stringify({ token, device, region })
-      });
-
-      if (!r.ok) {
-        const err = await r.text();
-        out.textContent = "❌ Error:\n" + err;
-        return;
-      }
-
-      const blob = await r.blob();
-      out.textContent = `✅ Received ${blob.size} bytes. Downloading...`;
-
+    function downloadText(filename, text){
+      const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `bbvpn-${region}-${device}.conf`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
+    }
 
-      // IMPORTANT: don't revoke immediately, can produce 0-byte downloads in some browsers
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        a.remove();
-        out.textContent += "\n✅ Import the .conf into WireGuard (Add tunnel → Import from file).";
-      }, 30000);
+    document.getElementById("go").onclick = async () => {
+      dl.innerHTML = "";
+      const device = document.getElementById("device").value.trim();
+      if (!device) { out.textContent = "❌ Please enter a device name."; return; }
+
+      out.textContent = "Working…";
+
+      const r = await fetch("/api/activate-all", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ token, device })
+      });
+
+      const txt = await r.text();
+
+      if (!r.ok) {
+        out.textContent = "❌ Error:\n" + txt;
+        return;
+      }
+
+      let data;
+      try { data = JSON.parse(txt); } catch { out.textContent = "❌ Bad response:\n" + txt; return; }
+
+      const configs = data.configs || {};
+      const errors = data.errors || {};
+
+      out.textContent =
+        "✅ Generated configs.\n" +
+        "Click to download each region:\n\n" +
+        (errors.eu ? `EU error: ${JSON.stringify(errors.eu)}\n` : "") +
+        (errors.us ? `US error: ${JSON.stringify(errors.us)}\n` : "") +
+        (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "");
+
+      if (configs.eu) dl.appendChild(mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu)));
+      if (configs.us) dl.appendChild(mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us)));
+      if (configs.sg) dl.appendChild(mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg)));
+
+      if (!configs.eu && !configs.us && !configs.sg) {
+        out.textContent += "\n\n❌ None succeeded.";
+      }
     };
   </script>
 
   <p style="margin-top:16px;opacity:.9">
-    WireGuard app → <b>Add tunnel</b> → <b>Import from file</b>.
+    Install WireGuard → Add tunnel → Import from file → select a downloaded <code>.conf</code>.
   </p>
 </body>
