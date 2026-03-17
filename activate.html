@@ -19,7 +19,6 @@
 
   <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
 
-  <!-- JSZip -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
   <script>
@@ -74,6 +73,13 @@
       downloadBlob(filename, blob);
     }
 
+    function pickFirst(obj, keys){
+      for (const key of keys) {
+        if (typeof obj[key] === "string" && obj[key].trim()) return obj[key];
+      }
+      return null;
+    }
+
     document.getElementById("go").onclick = async () => {
       dl.innerHTML = "";
 
@@ -110,17 +116,25 @@
         const configs = data.configs || {};
         const errors = data.errors || {};
 
+        // Нормализация ключей
+        const euConf = pickFirst(configs, ["eu", "europe", "europa", "amsterdam"]);
+        const usConf = pickFirst(configs, ["us", "usa", "america", "na", "newyork", "ny"]);
+        const sgConf = pickFirst(configs, ["sg", "singapore", "sin"]);
+
         const available = [];
-        if (configs.eu) available.push(["eu", configs.eu]);
-        if (configs.us) available.push(["us", configs.us]);
-        if (configs.sg) available.push(["sg", configs.sg]);
+        if (euConf) available.push(["eu", euConf]);
+        if (usConf) available.push(["us", usConf]);
+        if (sgConf) available.push(["sg", sgConf]);
 
         out.textContent =
           "✅ Generated configs.\n" +
           "Use Download All (Recommended) for a ZIP archive, or download regions one by one.\n\n" +
+          "Server returned config keys: " + (Object.keys(configs).length ? Object.keys(configs).join(", ") : "(none)") + "\n\n" +
           (errors.eu ? `EU error: ${JSON.stringify(errors.eu)}\n` : "") +
           (errors.us ? `US error: ${JSON.stringify(errors.us)}\n` : "") +
-          (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "");
+          (errors.usa ? `USA error: ${JSON.stringify(errors.usa)}\n` : "") +
+          (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "") +
+          (!usConf ? "⚠️ US config was not found under keys: us / usa / america / na / newyork / ny\n" : "");
 
         if (available.length > 0) {
           dl.appendChild(
@@ -129,7 +143,6 @@
                 out.textContent = "📦 Building ZIP archive…";
 
                 const zip = new JSZip();
-
                 for (const [region, conf] of available) {
                   zip.file(`bbvpn-${region}-${device}.conf`, conf);
                 }
@@ -147,26 +160,26 @@
           );
         }
 
-        if (configs.eu) {
+        if (euConf) {
           dl.appendChild(
-            mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu))
+            mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, euConf))
           );
         }
 
-        if (configs.us) {
+        if (usConf) {
           dl.appendChild(
-            mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us))
+            mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, usConf))
           );
         }
 
-        if (configs.sg) {
+        if (sgConf) {
           dl.appendChild(
-            mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg))
+            mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, sgConf))
           );
         }
 
-        if (!configs.eu && !configs.us && !configs.sg) {
-          out.textContent += "\n\n❌ None succeeded.";
+        if (!euConf && !usConf && !sgConf) {
+          out.textContent += "\n❌ None succeeded.";
         }
       } catch (err) {
         out.textContent = "❌ Network/client error:\n" + (err?.message || String(err));
