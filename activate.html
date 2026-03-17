@@ -35,6 +35,24 @@
       return b;
     }
 
+    function mkPrimaryBtn(label, onClick){
+      const b = document.createElement("button");
+      b.textContent = label;
+      b.style.cssText = `
+        padding:14px 18px;
+        border-radius:14px;
+        border:0;
+        cursor:pointer;
+        font-weight:900;
+        font-size:15px;
+        background:#ffd54a;
+        color:#000;
+        box-shadow:0 0 0 2px rgba(255,255,255,.08), 0 8px 24px rgba(255,213,74,.25);
+      `;
+      b.onclick = onClick;
+      return b;
+    }
+
     function downloadText(filename, text){
       const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
       const url = URL.createObjectURL(blob);
@@ -67,21 +85,55 @@
       }
 
       let data;
-      try { data = JSON.parse(txt); } catch { out.textContent = "❌ Bad response:\n" + txt; return; }
+      try {
+        data = JSON.parse(txt);
+      } catch {
+        out.textContent = "❌ Bad response:\n" + txt;
+        return;
+      }
 
       const configs = data.configs || {};
       const errors = data.errors || {};
 
+      const available = [];
+      if (configs.eu) available.push(["eu", configs.eu]);
+      if (configs.us) available.push(["us", configs.us]);
+      if (configs.sg) available.push(["sg", configs.sg]);
+
       out.textContent =
         "✅ Generated configs.\n" +
-        "Click to download each region:\n\n" +
+        "Click to download each region, or use Download All (Recommended).\n\n" +
         (errors.eu ? `EU error: ${JSON.stringify(errors.eu)}\n` : "") +
         (errors.us ? `US error: ${JSON.stringify(errors.us)}\n` : "") +
         (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "");
 
-      if (configs.eu) dl.appendChild(mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu)));
-      if (configs.us) dl.appendChild(mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us)));
-      if (configs.sg) dl.appendChild(mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg)));
+      if (available.length > 0) {
+        dl.appendChild(
+          mkPrimaryBtn("Download All (Recommended)", () => {
+            for (const [region, conf] of available) {
+              downloadText(`bbvpn-${region}-${device}.conf`, conf);
+            }
+          })
+        );
+      }
+
+      if (configs.eu) {
+        dl.appendChild(
+          mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu))
+        );
+      }
+
+      if (configs.us) {
+        dl.appendChild(
+          mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us))
+        );
+      }
+
+      if (configs.sg) {
+        dl.appendChild(
+          mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg))
+        );
+      }
 
       if (!configs.eu && !configs.us && !configs.sg) {
         out.textContent += "\n\n❌ None succeeded.";
