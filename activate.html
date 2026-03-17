@@ -19,6 +19,9 @@
 
   <pre id="out" style="margin-top:16px;white-space:pre-wrap;background:#0008;padding:12px;border-radius:12px"></pre>
 
+  <!-- JSZip -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
   <script>
     const out = document.getElementById("out");
     const dl = document.getElementById("dl");
@@ -53,90 +56,120 @@
       return b;
     }
 
-    function downloadText(filename, text){
-      const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+    function downloadBlob(filename, blob){
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
       a.click();
-      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 5000);
+    }
+
+    function downloadText(filename, text){
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      downloadBlob(filename, blob);
     }
 
     document.getElementById("go").onclick = async () => {
       dl.innerHTML = "";
+
       const device = document.getElementById("device").value.trim();
-      if (!device) { out.textContent = "❌ Please enter a device name."; return; }
+      if (!device) {
+        out.textContent = "❌ Please enter a device name.";
+        return;
+      }
 
       out.textContent = "Working…";
 
-      const r = await fetch("/api/activate-all", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ token, device })
-      });
-
-      const txt = await r.text();
-
-      if (!r.ok) {
-        out.textContent = "❌ Error:\n" + txt;
-        return;
-      }
-
-      let data;
       try {
-        data = JSON.parse(txt);
-      } catch {
-        out.textContent = "❌ Bad response:\n" + txt;
-        return;
-      }
+        const r = await fetch("/api/activate-all", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, device })
+        });
 
-      const configs = data.configs || {};
-      const errors = data.errors || {};
+        const txt = await r.text();
 
-      const available = [];
-      if (configs.eu) available.push(["eu", configs.eu]);
-      if (configs.us) available.push(["us", configs.us]);
-      if (configs.sg) available.push(["sg", configs.sg]);
+        if (!r.ok) {
+          out.textContent = "❌ Error:\n" + txt;
+          return;
+        }
 
-      out.textContent =
-        "✅ Generated configs.\n" +
-        "Click to download each region, or use Download All (Recommended).\n\n" +
-        (errors.eu ? `EU error: ${JSON.stringify(errors.eu)}\n` : "") +
-        (errors.us ? `US error: ${JSON.stringify(errors.us)}\n` : "") +
-        (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "");
+        let data;
+        try {
+          data = JSON.parse(txt);
+        } catch {
+          out.textContent = "❌ Bad response:\n" + txt;
+          return;
+        }
 
-      if (available.length > 0) {
-        dl.appendChild(
-          mkPrimaryBtn("Download All (Recommended)", () => {
-            for (const [region, conf] of available) {
-              downloadText(`bbvpn-${region}-${device}.conf`, conf);
-            }
-          })
-        );
-      }
+        const configs = data.configs || {};
+        const errors = data.errors || {};
 
-      if (configs.eu) {
-        dl.appendChild(
-          mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu))
-        );
-      }
+        const available = [];
+        if (configs.eu) available.push(["eu", configs.eu]);
+        if (configs.us) available.push(["us", configs.us]);
+        if (configs.sg) available.push(["sg", configs.sg]);
 
-      if (configs.us) {
-        dl.appendChild(
-          mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us))
-        );
-      }
+        out.textContent =
+          "✅ Generated configs.\n" +
+          "Use Download All (Recommended) for a ZIP archive, or download regions one by one.\n\n" +
+          (errors.eu ? `EU error: ${JSON.stringify(errors.eu)}\n` : "") +
+          (errors.us ? `US error: ${JSON.stringify(errors.us)}\n` : "") +
+          (errors.sg ? `SG error: ${JSON.stringify(errors.sg)}\n` : "");
 
-      if (configs.sg) {
-        dl.appendChild(
-          mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg))
-        );
-      }
+        if (available.length > 0) {
+          dl.appendChild(
+            mkPrimaryBtn("Download All (Recommended)", async () => {
+              try {
+                out.textContent = "📦 Building ZIP archive…";
 
-      if (!configs.eu && !configs.us && !configs.sg) {
-        out.textContent += "\n\n❌ None succeeded.";
+                const zip = new JSZip();
+
+                for (const [region, conf] of available) {
+                  zip.file(`bbvpn-${region}-${device}.conf`, conf);
+                }
+
+                const blob = await zip.generateAsync({ type: "blob" });
+                downloadBlob(`bbvpn-${device}-all-configs.zip`, blob);
+
+                out.textContent =
+                  "✅ ZIP archive downloaded.\n" +
+                  `Included: ${available.map(([region]) => region.toUpperCase()).join(", ")}`;
+              } catch (err) {
+                out.textContent = "❌ Failed to build ZIP archive.\n" + (err?.message || String(err));
+              }
+            })
+          );
+        }
+
+        if (configs.eu) {
+          dl.appendChild(
+            mkBtn("Download EU (.conf)", () => downloadText(`bbvpn-eu-${device}.conf`, configs.eu))
+          );
+        }
+
+        if (configs.us) {
+          dl.appendChild(
+            mkBtn("Download US (.conf)", () => downloadText(`bbvpn-us-${device}.conf`, configs.us))
+          );
+        }
+
+        if (configs.sg) {
+          dl.appendChild(
+            mkBtn("Download SG (.conf)", () => downloadText(`bbvpn-sg-${device}.conf`, configs.sg))
+          );
+        }
+
+        if (!configs.eu && !configs.us && !configs.sg) {
+          out.textContent += "\n\n❌ None succeeded.";
+        }
+      } catch (err) {
+        out.textContent = "❌ Network/client error:\n" + (err?.message || String(err));
       }
     };
   </script>
