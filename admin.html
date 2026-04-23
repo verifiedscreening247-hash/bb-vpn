@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BB VPN — Admin</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --muted: #666;
+    --accent: #c084fc;
+    --accent2: #818cf8;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --sidebar-w: 220px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  aside {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .logo-area {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, #c084fc, #818cf8);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+
+  .logo-text { font-weight: 600; font-size: 15px; }
+  .logo-sub  { font-size: 11px; color: var(--muted); }
+
+  nav { padding: 12px 8px; flex: 1; }
+
+  .nav-section {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: .08em; color: var(--muted);
+    text-transform: uppercase;
+    padding: 16px 10px 6px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 7px;
+    cursor: pointer; color: var(--muted);
+    transition: background .15s, color .15s;
+    font-size: 13.5px; user-select: none;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--surface2); color: var(--text); }
+  .nav-item .icon { width: 16px; text-align: center; font-size: 15px; }
+
+  .badge {
+    margin-left: auto;
+    background: var(--accent); color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 20px;
+  }
+
+  .badge-red { background: var(--red); }
+
+  .sidebar-footer {
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .avatar {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #c084fc, #f472b6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+
+  .footer-name { font-size: 13px; font-weight: 500; }
+  .footer-role { font-size: 11px; color: var(--muted); }
+
+  main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .page-title { font-size: 16px; font-weight: 600; }
+  .page-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-label { font-size: 12px; color: var(--muted); }
+
+  .btn {
+    padding: 7px 14px; border-radius: 7px;
+    border: none; cursor: pointer;
+    font-size: 13px; font-weight: 500;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-ghost   { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-red     { background: var(--red); color: #fff; }
+  .btn-sm      { padding: 4px 10px; font-size: 12px; }
+
+  .content { padding: 28px; display: flex; flex-direction: column; gap: 24px; }
+
+  .page { display: none; }
+  .page.active { display: contents; }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 700; }
+  .stat-sub   { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat-up    { color: var(--green); }
+  .stat-down  { color: var(--red); }
+
+  /* Table card */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .table-head {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .table-title { font-weight: 600; font-size: 14px; white-space: nowrap; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    text-align: left; padding: 11px 20px;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td { padding: 13px 20px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  tr.clickable { cursor: pointer; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 11.5px; font-weight: 500;
+  }
+
+  .pill-green  { background: rgba(52,211,153,.12);  color: var(--green); }
+  .pill-red    { background: rgba(248,113,113,.12);  color: var(--red); }
+  .pill-yellow { background: rgba(251,191,36,.12);   color: var(--yellow); }
+  .pill-purple { background: rgba(192,132,252,.12);  color: var(--accent); }
+  .pill-blue   { background: rgba(129,140,248,.12);  color: var(--accent2); }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .dot-green  { background: var(--green);  box-shadow: 0 0 4px var(--green); }
+  .dot-red    { background: var(--red);    box-shadow: 0 0 4px var(--red); }
+  .dot-yellow { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); }
+
+  /* Search */
+  .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    min-width: 220px;
+    transition: border-color .15s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 2px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .tab {
+    padding: 6px 16px; border-radius: 6px;
+    cursor: pointer; font-size: 13px; color: var(--muted);
+    transition: background .15s, color .15s;
+    user-select: none;
+  }
+
+  .tab.active { background: var(--surface); color: var(--text); font-weight: 500; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Payment method mini chart */
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .method-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  .method-icon { font-size: 22px; }
+  .method-label { font-size: 12px; color: var(--muted); }
+  .method-value { font-size: 20px; font-weight: 700; }
+  .method-bar { height: 4px; border-radius: 2px; background: var(--border); margin-top: 4px; }
+  .method-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+
+  /* Server cards */
+  .server-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+  .server-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .server-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .server-name { font-weight: 600; font-size: 15px; }
+  .server-loc  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .server-stat { margin-bottom: 12px; }
+  .server-stat-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+
+  .progress-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; }
+  .fill-green  { background: var(--green); }
+  .fill-yellow { background: var(--yellow); }
+  .fill-red    { background: var(--red); }
+
+  .server-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .metric { background: var(--surface2); border-radius: 7px; padding: 10px 12px; }
+  .metric-val   { font-size: 17px; font-weight: 700; }
+  .metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Form */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    padding: 20px;
+  }
+
+  .field label {
+    display: block; font-size: 12px;
+    color: var(--muted); margin-bottom: 6px; font-weight: 500;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color .15s;
+    font-family: inherit;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  /* Chart */
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .chart-title { font-weight: 600; margin-bottom: 20px; }
+
+  .chart-area {
+    display: flex; align-items: flex-end; gap: 8px;
+    height: 140px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+  .bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity .15s; cursor: default; }
+  .bar:hover { opacity: .75; }
+  .bar-label { font-size: 10px; color: var(--muted); margin-top: 6px; }
+
+  .chart-legend { display: flex; gap: 16px; margin-top: 14px; }
+  .legend-item  { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .legend-dot   { width: 8px; height: 8px; border-radius: 2px; }
+
+  /* User detail */
+  .user-detail { display: none; flex-direction: column; gap: 24px; }
+  .user-detail.active { display: flex; }
+
+  .detail-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+
+  .detail-avatar {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #c084fc, #818cf8);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .detail-info { flex: 1; }
+  .detail-email { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .detail-meta  { display: flex; gap: 16px; flex-wrap: wrap; }
+  .detail-tag   { font-size: 12px; color: var(--muted); }
+  .detail-tag span { color: var(--text); font-weight: 500; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .info-card-title { font-size: 12px; color: var(--muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: var(--muted); }
+  .info-val { font-weight: 500; }
+
+  .key-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--accent);
+    word-break: break-all;
+    margin-top: 8px;
+  }
+
+  /* Support */
+  .support-layout { display: grid; grid-template-columns: 300px 1fr; gap: 16px; height: 560px; }
+
+  .ticket-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow-y: auto;
+  }
+
+  .ticket-list-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 14px;
+    position: sticky; top: 0;
+    background: var(--surface);
+  }
+
+  .ticket-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .ticket-item:hover { background: var(--surface2); }
+  .ticket-item.active { background: var(--surface2); border-left: 2px solid var(--accent); }
+  .ticket-item:last-child { border-bottom: none; }
+
+  .ticket-from { font-weight: 500; font-size: 13px; margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .ticket-subject { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ticket-time { font-size: 11px; color: var(--muted); }
+
+  .ticket-unread .ticket-from { color: var(--accent); }
+
+  .ticket-view {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; flex-direction: column;
+  }
+
+  .ticket-view-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ticket-view-subject { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .ticket-view-meta    { font-size: 12px; color: var(--muted); }
+
+  .ticket-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+  .msg {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .msg-user  { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; }
+  .msg-admin { background: rgba(192,132,252,.15); border: 1px solid rgba(192,132,252,.25); align-self: flex-end; }
+  .msg-sender { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+
+  .ticket-reply {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+
+  .ticket-reply textarea {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13.5px;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    min-height: 60px;
+    max-height: 120px;
+    transition: border-color .15s;
+  }
+
+  .ticket-reply textarea:focus { border-color: var(--accent); }
+
+  /* Quick commands */
+  .quick-bar {
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+    background: var(--bg);
+  }
+
+  .quick-cmd {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); cursor: pointer;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+
+  .quick-cmd:hover { background: var(--border); color: var(--text); }
+
+  .quick-cmd .cmd-key {
+    font-weight: 700; color: var(--accent); font-size: 11px;
+    background: rgba(192,132,252,.12); padding: 1px 5px; border-radius: 4px;
+  }
+
+  .autocomplete-popup {
+    position: absolute; bottom: 100%; left: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px;
+    display: none; flex-direction: column; gap: 2px;
+    min-width: 260px; z-index: 50;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  }
+
+  .autocomplete-popup.visible { display: flex; }
+
+  .ac-item {
+    padding: 7px 10px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; display: flex; gap: 8px; align-items: center;
+  }
+
+  .ac-item:hover, .ac-item.selected { background: var(--surface2); }
+  .ac-key { font-weight: 700; color: var(--accent); min-width: 28px; }
+  .ac-text { color: var(--muted); }
+
+  /* Referral */
+  .ref-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+  .ref-flow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+  }
+
+  .ref-arrow { color: var(--muted); }
+
+  @media (max-width: 1100px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .server-grid { grid-template-columns: 1fr 1fr; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    .method-grid { grid-template-columns: 1fr 1fr; }
+    .support-layout { grid-template-columns: 1fr; height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside>
+  <div class="logo-area">
+    <div class="logo-icon">🛡</div>
+    <div>
+      <div class="logo-text">BB VPN</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="icon">⊞</span> Dashboard
+    </div>
+
+    <div class="nav-section">Management</div>
+    <div class="nav-item" onclick="showPage('payments',this)">
+      <span class="icon">💳</span> Payments
+    </div>
+    <div class="nav-item" onclick="showPage('users',this)">
+      <span class="icon">👤</span> Users
+      <span class="badge">248</span>
+    </div>
+    <div class="nav-item" onclick="showPage('servers',this)">
+      <span class="icon">🖥</span> Servers
+    </div>
+    <div class="nav-item" onclick="showPage('traffic',this)">
+      <span class="icon">📊</span> Traffic
+    </div>
+    <div class="nav-item" onclick="showPage('promo',this)">
+      <span class="icon">🎟</span> Promo Codes
+    </div>
+    <div class="nav-item" onclick="showPage('referral',this)">
+      <span class="icon">🔗</span> Referrals
+    </div>
+    <div class="nav-item" onclick="showPage('support',this)">
+      <span class="icon">💬</span> Support
+      <span class="badge badge-red">3</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="avatar">P</div>
+    <div>
+      <div class="footer-name">Penis Boss</div>
+      <div class="footer-role">Super Admin</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+  <header>
+    <div>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-sub"   id="pageSub">Welcome back — here's what's happening</div>
+    </div>
+    <div class="header-right">
+      <div class="dot dot-green"></div>
+      <div class="status-label">All systems operational</div>
+      <button class="btn btn-ghost">Export</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ══════ DASHBOARD ══════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Monthly Revenue</div>
+          <div class="stat-value">$1,724</div>
+          <div class="stat-sub stat-up">↑ 12% vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Subscribers</div>
+          <div class="stat-value">248</div>
+          <div class="stat-sub stat-up">↑ 18 new this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Traffic</div>
+          <div class="stat-value">4.2 TB</div>
+          <div class="stat-sub stat-up">↑ 8% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Open Tickets</div>
+          <div class="stat-value stat-down">3</div>
+          <div class="stat-sub">Awaiting reply</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-head">
+          <div class="table-title">Recent Payments</div>
+          <button class="btn btn-ghost" onclick="showPage('payments',null)">View all →</button>
+        </div>
+        <table>
+          <thead><tr><th>User</th><th>Amount</th><th>Plan</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>user_4f2a@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Apr 23, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+            <tr><td>user_7c9b@gmail.com</td><td>$69.69</td><td>Yearly</td><td>Apr 22, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+            <tr><td>user_1e3d@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Apr 21, 2026</td><td><span class="pill pill-red"><span class="dot dot-red"></span>Failed</span></td></tr>
+            <tr><td>user_9a2f@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Apr 21, 2026</td><td><span class="pill pill-yellow">Refunded</span></td></tr>
+            <tr><td>user_0d5c@gmail.com</td><td>$69.69</td><td>Yearly</td><td>Apr 20, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="server-grid">
+        <div class="server-card">
+          <div class="server-header">
+            <div><div class="server-name">🇩🇪 EU</div><div class="server-loc">Frankfurt, Germany</div></div>
+            <span class="pill pill-green"><span class="dot dot-green"></span>Online</span>
+          </div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 34%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:34%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">112</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">1.8 TB</div><div class="metric-label">Traffic</div></div>
+          </div>
+        </div>
+        <div class="server-card">
+          <div class="server-header">
+            <div><div class="server-name">🇺🇸 US</div><div class="server-loc">New York, USA</div></div>
+            <span class="pill pill-yellow"><span class="dot dot-yellow"></span>High Load</span>
+          </div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 61%</div><div class="progress-bar"><div class="progress-fill fill-yellow" style="width:61%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">98</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">1.6 TB</div><div class="metric-label">Traffic</div></div>
+          </div>
+        </div>
+        <div class="server-card">
+          <div class="server-header">
+            <div><div class="server-name">🇸🇬 SG</div><div class="server-loc">Singapore</div></div>
+            <span class="pill pill-green"><span class="dot dot-green"></span>Online</span>
+          </div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 22%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:22%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">38</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">0.8 TB</div><div class="metric-label">Traffic</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ PAYMENTS ══════ -->
+    <div class="page" id="page-payments">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value">$14,280</div><div class="stat-sub stat-up">↑ 12% vs last month</div></div>
+        <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value">$1,724</div><div class="stat-sub">April 2026</div></div>
+        <div class="stat-card"><div class="stat-label">Total Refunded</div><div class="stat-value stat-down">$208</div><div class="stat-sub">12 refunds all time</div></div>
+        <div class="stat-card"><div class="stat-label">Failed Payments</div><div class="stat-value stat-down">7</div><div class="stat-sub stat-down">↑ 2 this month</div></div>
+      </div>
+
+      <!-- Payment method stats -->
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-icon">💳</div>
+          <div class="method-label">Visa</div>
+          <div class="method-value">$8,940</div>
+          <div class="method-bar"><div class="method-fill" style="width:63%"></div></div>
+          <div style="font-size:11px;color:var(--muted)">63% of revenue</div>
+        </div>
+        <div class="method-card">
+          <div class="method-icon">🟠</div>
+          <div class="method-label">Mastercard</div>
+          <div class="method-value">$3,420</div>
+          <div class="method-bar"><div class="method-fill" style="width:24%;background:var(--yellow)"></div></div>
+          <div style="font-size:11px;color:var(--muted)">24% of revenue</div>
+        </div>
+        <div class="method-card">
+          <div class="method-icon">🅿️</div>
+          <div class="method-label">PayPal</div>
+          <div class="method-value">$1,280</div>
+          <div class="method-bar"><div class="method-fill" style="width:9%;background:var(--accent2)"></div></div>
+          <div style="font-size:11px;color:var(--muted)">9% of revenue</div>
+        </div>
+        <div class="method-card">
+          <div class="method-icon">🟡</div>
+          <div class="method-label">Crypto</div>
+          <div class="method-value">$640</div>
+          <div class="method-bar"><div class="method-fill" style="width:4%;background:var(--green)"></div></div>
+          <div style="font-size:11px;color:var(--muted)">4% of revenue</div>
+        </div>
+      </div>
+
+      <!-- Tabs: Payments / Refunds -->
+      <div class="table-card">
+        <div class="table-head">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab('pay','payments')">Payments</div>
+            <div class="tab"       onclick="switchTab('pay','refunds')">Refunds</div>
+          </div>
+          <input class="search-input" placeholder="Search by email or tx ID…" oninput="filterTable('payTable',this.value)" />
+        </div>
+
+        <div class="tab-content active" id="pay-payments">
+          <table>
+            <thead><tr><th>TX ID</th><th>User</th><th>Amount</th><th>Plan</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="payTable">
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Pf4a…</span></td><td>user_4f2a@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Visa ••4242</td><td>Apr 23, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Pf3b…</span></td><td>user_7c9b@gmail.com</td><td>$69.69</td><td>Yearly</td><td>Mastercard ••1234</td><td>Apr 22, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Pf2c…</span></td><td>user_1e3d@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Visa ••5678</td><td>Apr 21, 2026</td><td><span class="pill pill-red"><span class="dot dot-red"></span>Failed</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Pf0e…</span></td><td>user_0d5c@gmail.com</td><td>$69.69</td><td>Yearly</td><td>Visa ••9999</td><td>Apr 20, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Pezf…</span></td><td>user_2b7a@gmail.com</td><td>$6.96</td><td>Monthly</td><td>Mastercard ••3311</td><td>Apr 20, 2026</td><td><span class="pill pill-green"><span class="dot dot-green"></span>Paid</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">ch_3Peyg…</span></td><td>user_5f1b@gmail.com</td><td>$6.96</td><td>Monthly</td><td>PayPal</td><td>Apr 19, 2026</td><td><span class="pill pill-purple">Pending</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-content" id="pay-refunds">
+          <table>
+            <thead><tr><th>Refund ID</th><th>User</th><th>Amount</th><th>Reason</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:var(--muted);font-size:12px">re_3Pf1d…</span></td><td>user_9a2f@gmail.com</td><td>$6.96</td><td>User request</td><td>Apr 21, 2026</td><td><span class="pill pill-yellow">Refunded</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">re_3Paz2…</span></td><td>user_3c8e@gmail.com</td><td>$6.96</td><td>Duplicate charge</td><td>Apr 14, 2026</td><td><span class="pill pill-yellow">Refunded</span></td></tr>
+              <tr><td><span style="color:var(--muted);font-size:12px">re_3PbX9…</span></td><td>user_8d1f@gmail.com</td><td>$69.69</td><td>Not satisfied</td><td>Apr 5, 2026</td><td><span class="pill pill-yellow">Refunded</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ USERS ══════ -->
+    <div class="page" id="page-users">
+      <!-- User list view -->
+      <div id="userList">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value">248</div><div class="stat-sub stat-up">↑ 18 this week</div></div>
+          <div class="stat-card"><div class="stat-label">Monthly Plan</div><div class="stat-value">189</div><div class="stat-sub">76%</div></div>
+          <div class="stat-card"><div class="stat-label">Yearly Plan</div><div class="stat-value">59</div><div class="stat-sub">24%</div></div>
+          <div class="stat-card"><div class="stat-label">Churned (30d)</div><div class="stat-value stat-down">11</div><div class="stat-sub stat-down">4.4%</div></div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-head">
+            <div class="table-title">All Users</div>
+            <input class="search-input" placeholder="Search by email…" oninput="filterTable('userTable',this.value)" />
+          </div>
+          <table>
+            <thead><tr><th>Email</th><th>Plan</th><th>Devices</th><th>Region</th><th>Since</th><th>Next Billing</th><th>Status</th></tr></thead>
+            <tbody id="userTable">
+              <tr class="clickable" onclick="openUser('user_4f2a@gmail.com')"><td>user_4f2a@gmail.com</td><td>Monthly</td><td>4</td><td>EU, US</td><td>Jan 5, 2026</td><td>May 23, 2026</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr class="clickable" onclick="openUser('user_7c9b@gmail.com')"><td>user_7c9b@gmail.com</td><td>Yearly</td><td>5</td><td>EU</td><td>Feb 12, 2026</td><td>Feb 12, 2027</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr class="clickable" onclick="openUser('user_1e3d@gmail.com')"><td>user_1e3d@gmail.com</td><td>Monthly</td><td>2</td><td>SG</td><td>Mar 1, 2026</td><td>—</td><td><span class="pill pill-red">Suspended</span></td></tr>
+              <tr class="clickable" onclick="openUser('user_9a2f@gmail.com')"><td>user_9a2f@gmail.com</td><td>Monthly</td><td>3</td><td>US</td><td>Mar 15, 2026</td><td>May 15, 2026</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr class="clickable" onclick="openUser('user_0d5c@gmail.com')"><td>user_0d5c@gmail.com</td><td>Yearly</td><td>5</td><td>EU, US, SG</td><td>Apr 1, 2026</td><td>Apr 1, 2027</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr class="clickable" onclick="openUser('user_3c8e@gmail.com')"><td>user_3c8e@gmail.com</td><td>Monthly</td><td>1</td><td>EU</td><td>Apr 10, 2026</td><td>May 10, 2026</td><td><span class="pill pill-yellow">Trial</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- User detail view -->
+      <div class="user-detail" id="userDetail">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn btn-ghost btn-sm" onclick="closeUser()">← Back to Users</button>
+          <span style="color:var(--muted);font-size:13px" id="detailBreadcrumb"></span>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-avatar" id="detailAvatar">U</div>
+          <div class="detail-info">
+            <div class="detail-email" id="detailEmail"></div>
+            <div class="detail-meta">
+              <div class="detail-tag">Plan: <span id="detailPlan"></span></div>
+              <div class="detail-tag">Status: <span id="detailStatus"></span></div>
+              <div class="detail-tag">Registered: <span id="detailReg"></span></div>
+              <div class="detail-tag">Auto-pay: <span id="detailAutopay"></span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-ghost btn-sm">Send Email</button>
+            <button class="btn btn-red btn-sm">Suspend</button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <!-- Billing -->
+          <div class="info-card">
+            <div class="info-card-title">Billing</div>
+            <div class="info-row"><span class="info-key">Next charge</span><span class="info-val" id="dNextBill"></span></div>
+            <div class="info-row"><span class="info-key">Payment method</span><span class="info-val" id="dMethod"></span></div>
+            <div class="info-row"><span class="info-key">Total paid</span><span class="info-val" id="dTotalPaid"></span></div>
+            <div class="info-row"><span class="info-key">Refunds</span><span class="info-val stat-down" id="dRefunds"></span></div>
+          </div>
+          <!-- Devices -->
+          <div class="info-card">
+            <div class="info-card-title">Devices &amp; Traffic</div>
+            <div class="info-row"><span class="info-key">Devices</span><span class="info-val" id="dDevices"></span></div>
+            <div class="info-row"><span class="info-key">Regions</span><span class="info-val" id="dRegions"></span></div>
+            <div class="info-row"><span class="info-key">Traffic (month)</span><span class="info-val stat-up" id="dTraffic"></span></div>
+            <div class="info-row"><span class="info-key">Traffic (total)</span><span class="info-val" id="dTrafficTotal"></span></div>
+          </div>
+          <!-- WireGuard Key -->
+          <div class="info-card">
+            <div class="info-card-title">WireGuard Key</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Public Key</div>
+            <div class="key-box" id="dWgKey"></div>
+            <div style="margin-top:10px">
+              <button class="btn btn-ghost btn-sm" onclick="copyKey()">Copy Key</button>
+              <button class="btn btn-ghost btn-sm" style="margin-left:6px">Revoke</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User payments -->
+        <div class="table-card">
+          <div class="table-head">
+            <div class="tabs">
+              <div class="tab active" onclick="switchTab('udet','payments')">Payments</div>
+              <div class="tab"       onclick="switchTab('udet','refunds')">Refunds</div>
+            </div>
+          </div>
+          <div class="tab-content active" id="udet-payments">
+            <table>
+              <thead><tr><th>TX ID</th><th>Amount</th><th>Plan</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="dPayTable"></tbody>
+            </table>
+          </div>
+          <div class="tab-content" id="udet-refunds">
+            <table>
+              <thead><tr><th>Refund ID</th><th>Amount</th><th>Reason</th><th>Date</th></tr></thead>
+              <tbody id="dRefTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SERVERS ══════ -->
+    <div class="page" id="page-servers">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Servers</div><div class="stat-value">3</div><div class="stat-sub stat-up">All online</div></div>
+        <div class="stat-card"><div class="stat-label">Total Devices</div><div class="stat-value">891</div><div class="stat-sub">WireGuard peers</div></div>
+        <div class="stat-card"><div class="stat-label">Peak Bandwidth</div><div class="stat-value">2.4 Gbps</div><div class="stat-sub">Today at 21:00</div></div>
+        <div class="stat-card"><div class="stat-label">Uptime</div><div class="stat-value stat-up">99.97%</div><div class="stat-sub">Last 30 days</div></div>
+      </div>
+      <div class="server-grid">
+        <div class="server-card">
+          <div class="server-header"><div><div class="server-name">🇩🇪 EU — Frankfurt</div><div class="server-loc">Vultr · 8 vCPU · 16 GB</div></div><span class="pill pill-green"><span class="dot dot-green"></span>Online</span></div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 34%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:34%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">RAM — 48%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:48%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">Disk — 21%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:21%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">112</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">1.8 TB</div><div class="metric-label">Traffic</div></div>
+            <div class="metric"><div class="metric-val">430</div><div class="metric-label">Devices</div></div>
+            <div class="metric"><div class="metric-val">12 ms</div><div class="metric-label">Latency</div></div>
+          </div>
+        </div>
+        <div class="server-card">
+          <div class="server-header"><div><div class="server-name">🇺🇸 US — New York</div><div class="server-loc">Vultr · 8 vCPU · 16 GB</div></div><span class="pill pill-yellow"><span class="dot dot-yellow"></span>High Load</span></div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 61%</div><div class="progress-bar"><div class="progress-fill fill-yellow" style="width:61%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">RAM — 72%</div><div class="progress-bar"><div class="progress-fill fill-yellow" style="width:72%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">Disk — 38%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:38%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">98</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">1.6 TB</div><div class="metric-label">Traffic</div></div>
+            <div class="metric"><div class="metric-val">355</div><div class="metric-label">Devices</div></div>
+            <div class="metric"><div class="metric-val">28 ms</div><div class="metric-label">Latency</div></div>
+          </div>
+        </div>
+        <div class="server-card">
+          <div class="server-header"><div><div class="server-name">🇸🇬 SG — Singapore</div><div class="server-loc">Vultr · 4 vCPU · 8 GB</div></div><span class="pill pill-green"><span class="dot dot-green"></span>Online</span></div>
+          <div class="server-stat"><div class="server-stat-label">CPU — 22%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:22%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">RAM — 31%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:31%"></div></div></div>
+          <div class="server-stat"><div class="server-stat-label">Disk — 15%</div><div class="progress-bar"><div class="progress-fill fill-green" style="width:15%"></div></div></div>
+          <div class="server-metrics">
+            <div class="metric"><div class="metric-val">38</div><div class="metric-label">Users</div></div>
+            <div class="metric"><div class="metric-val">0.8 TB</div><div class="metric-label">Traffic</div></div>
+            <div class="metric"><div class="metric-val">106</div><div class="metric-label">Devices</div></div>
+            <div class="metric"><div class="metric-val">44 ms</div><div class="metric-label">Latency</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ TRAFFIC ══════ -->
+    <div class="page" id="page-traffic">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Today</div><div class="stat-value">142 GB</div><div class="stat-sub stat-up">↑ 11% vs yesterday</div></div>
+        <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value">4.2 TB</div><div class="stat-sub">April 2026</div></div>
+        <div class="stat-card"><div class="stat-label">Peak Bandwidth</div><div class="stat-value">2.4 Gbps</div><div class="stat-sub">Today 21:00 UTC</div></div>
+        <div class="stat-card"><div class="stat-label">Avg per User</div><div class="stat-value">16.9 GB</div><div class="stat-sub">This month</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Daily Traffic — Last 14 Days (GB)</div>
+        <div class="chart-area">
+          <div class="bar-group"><div class="bar fill-green" style="height:52%;background:#34d399"></div><div class="bar-label">10</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:61%;background:#34d399"></div><div class="bar-label">11</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:45%;background:#34d399"></div><div class="bar-label">12</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:70%;background:#34d399"></div><div class="bar-label">13</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:63%;background:#34d399"></div><div class="bar-label">14</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:80%;background:#34d399"></div><div class="bar-label">15</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:55%;background:#34d399"></div><div class="bar-label">16</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:72%;background:#34d399"></div><div class="bar-label">17</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:68%;background:#34d399"></div><div class="bar-label">18</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:85%;background:#34d399"></div><div class="bar-label">19</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:76%;background:#34d399"></div><div class="bar-label">20</div></div>
+          <div class="bar-group"><div class="bar fill-green" style="height:90%;background:#34d399"></div><div class="bar-label">21</div></div>
+          <div class="bar-group"><div class="bar" style="height:82%;background:#fbbf24"></div><div class="bar-label">22</div></div>
+          <div class="bar-group"><div class="bar" style="height:100%;background:#818cf8"></div><div class="bar-label">23</div></div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Normal</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div>High</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#818cf8"></div>Today</div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><div class="table-title">Traffic by Server</div></div>
+        <table>
+          <thead><tr><th>Server</th><th>Download</th><th>Upload</th><th>Total</th><th>Users</th><th>Load</th></tr></thead>
+          <tbody>
+            <tr><td>🇩🇪 EU Frankfurt</td><td>1.1 TB</td><td>0.7 TB</td><td>1.8 TB</td><td>112</td><td><span class="pill pill-green">34%</span></td></tr>
+            <tr><td>🇺🇸 US New York</td><td>1.0 TB</td><td>0.6 TB</td><td>1.6 TB</td><td>98</td><td><span class="pill pill-yellow">61%</span></td></tr>
+            <tr><td>🇸🇬 SG Singapore</td><td>0.5 TB</td><td>0.3 TB</td><td>0.8 TB</td><td>38</td><td><span class="pill pill-green">22%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ PROMO ══════ -->
+    <div class="page" id="page-promo">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Active Codes</div><div class="stat-value">8</div></div>
+        <div class="stat-card"><div class="stat-label">Total Used</div><div class="stat-value">47</div></div>
+        <div class="stat-card"><div class="stat-label">Discount Given</div><div class="stat-value stat-down">$142</div><div class="stat-sub">This month</div></div>
+        <div class="stat-card"><div class="stat-label">Conversions</div><div class="stat-value stat-up">68%</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><div class="table-title">Create Promo Code</div></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:1fr 140px 1fr 1fr 1fr auto;gap:12px;align-items:end">
+            <div class="field"><label>Code</label><input id="promoCode" placeholder="SUMMER25" style="text-transform:uppercase"></div>
+            <div class="field">
+              <label>Type</label>
+              <select id="promoType" onchange="togglePromoType()">
+                <option value="regular">Regular (скидка)</option>
+                <option value="gift">Gift (дни/месяц)</option>
+              </select>
+            </div>
+            <div class="field" id="promoDiscountWrap">
+              <label>Скидка</label>
+              <select id="promoDiscount"><option>10%</option><option>20%</option><option>25%</option><option>50%</option><option>100% (Free)</option></select>
+            </div>
+            <div class="field" id="promoGiftWrap" style="display:none">
+              <label>Подарок</label>
+              <select id="promoGift"><option>7 дней</option><option>14 дней</option><option>1 месяц</option><option>3 месяца</option><option>6 месяцев</option></select>
+            </div>
+            <div class="field"><label>Действует с</label><input type="date" id="promoFrom"></div>
+            <div class="field"><label>Действует по</label><input type="date" id="promoExpiry"></div>
+            <div style="padding-bottom:1px"><button class="btn btn-primary" onclick="addPromo()">+ Create</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><div class="table-title">All Promo Codes</div></div>
+        <table>
+          <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Used</th><th>Valid</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="promoTable">
+            <tr><td><b>LAUNCH50</b></td><td><span class="pill pill-blue">Regular</span></td><td>50%</td><td>23</td><td>Apr 1 — May 1, 2026</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm" onclick="this.closest('tr').remove()">Revoke</button></td></tr>
+            <tr><td><b>FRIEND20</b></td><td><span class="pill pill-blue">Regular</span></td><td>20%</td><td>11</td><td>Apr 1 — Jun 30, 2026</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm" onclick="this.closest('tr').remove()">Revoke</button></td></tr>
+            <tr><td><b>GIFT1M</b></td><td><span class="pill pill-purple">Gift</span></td><td>1 месяц</td><td>4</td><td>Apr 15 — May 15, 2026</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm" onclick="this.closest('tr').remove()">Revoke</button></td></tr>
+            <tr><td><b>WELCOME10</b></td><td><span class="pill pill-blue">Regular</span></td><td>10%</td><td>8</td><td>Jan 1 — Dec 31, 2026</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm" onclick="this.closest('tr').remove()">Revoke</button></td></tr>
+            <tr><td><b>OLDCODE</b></td><td><span class="pill pill-blue">Regular</span></td><td>25%</td><td>5</td><td>Jan 1, 2025 — Jan 1, 2026</td><td><span class="pill pill-red">Expired</span></td><td><button class="btn btn-ghost btn-sm" disabled>—</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ REFERRALS ══════ -->
+    <div class="page" id="page-referral">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Referrers</div><div class="stat-value">34</div><div class="stat-sub">Active affiliates</div></div>
+        <div class="stat-card"><div class="stat-label">Referred Users</div><div class="stat-value">81</div><div class="stat-sub stat-up">↑ 9 this month</div></div>
+        <div class="stat-card"><div class="stat-label">Revenue from Refs</div><div class="stat-value stat-up">$3,240</div><div class="stat-sub">All time</div></div>
+        <div class="stat-card"><div class="stat-label">Payouts Pending</div><div class="stat-value stat-down">$486</div><div class="stat-sub">To be paid out</div></div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-head">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab('ref','referrers')">Referrers</div>
+            <div class="tab"       onclick="switchTab('ref','referrals')">Referrals</div>
+            <div class="tab"       onclick="switchTab('ref','payouts')">Payouts</div>
+          </div>
+          <input class="search-input" placeholder="Search…" oninput="filterTable('refTable',this.value)" />
+        </div>
+
+        <!-- Referrers -->
+        <div class="tab-content active" id="ref-referrers">
+          <table>
+            <thead><tr><th>Referrer</th><th>Code</th><th>Referred</th><th>Revenue</th><th>Commission (20%)</th><th>Paid Out</th><th>Pending</th></tr></thead>
+            <tbody id="refTable">
+              <tr><td>user_4f2a@gmail.com</td><td>REF-4F2A</td><td>18</td><td>$720</td><td>$144</td><td>$100</td><td><b class="stat-down">$44</b></td></tr>
+              <tr><td>user_7c9b@gmail.com</td><td>REF-7C9B</td><td>12</td><td>$490</td><td>$98</td><td>$98</td><td><b style="color:var(--green)">$0</b></td></tr>
+              <tr><td>user_0d5c@gmail.com</td><td>REF-0D5C</td><td>9</td><td>$380</td><td>$76</td><td>$0</td><td><b class="stat-down">$76</b></td></tr>
+              <tr><td>user_2b7a@gmail.com</td><td>REF-2B7A</td><td>7</td><td>$290</td><td>$58</td><td>$0</td><td><b class="stat-down">$58</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Referrals -->
+        <div class="tab-content" id="ref-referrals">
+          <table>
+            <thead><tr><th>New User</th><th>Referred By</th><th>Code Used</th><th>Joined</th><th>Plan</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>user_9a2f@gmail.com</td>
+                <td><div class="ref-flow"><span>user_4f2a@gmail.com</span><span class="ref-arrow">→</span></div></td>
+                <td>REF-4F2A</td><td>Mar 15, 2026</td><td>Monthly</td><td><span class="pill pill-green">Active</span></td>
+              </tr>
+              <tr>
+                <td>user_3c8e@gmail.com</td>
+                <td><div class="ref-flow"><span>user_4f2a@gmail.com</span><span class="ref-arrow">→</span></div></td>
+                <td>REF-4F2A</td><td>Apr 10, 2026</td><td>Monthly</td><td><span class="pill pill-yellow">Trial</span></td>
+              </tr>
+              <tr>
+                <td>user_5f1b@gmail.com</td>
+                <td><div class="ref-flow"><span>user_7c9b@gmail.com</span><span class="ref-arrow">→</span></div></td>
+                <td>REF-7C9B</td><td>Apr 19, 2026</td><td>Monthly</td><td><span class="pill pill-green">Active</span></td>
+              </tr>
+              <tr>
+                <td>user_8d1f@gmail.com</td>
+                <td><div class="ref-flow"><span>user_0d5c@gmail.com</span><span class="ref-arrow">→</span></div></td>
+                <td>REF-0D5C</td><td>Apr 2, 2026</td><td>Yearly</td><td><span class="pill pill-red">Suspended</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payouts -->
+        <div class="tab-content" id="ref-payouts">
+          <table>
+            <thead><tr><th>Referrer</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>user_7c9b@gmail.com</td><td>$98</td><td>PayPal</td><td>Apr 15, 2026</td><td><span class="pill pill-green">Paid</span></td><td>—</td></tr>
+              <tr><td>user_4f2a@gmail.com</td><td>$100</td><td>PayPal</td><td>Apr 1, 2026</td><td><span class="pill pill-green">Paid</span></td><td>—</td></tr>
+              <tr><td>user_4f2a@gmail.com</td><td>$44</td><td>—</td><td>—</td><td><span class="pill pill-yellow">Pending</span></td><td><button class="btn btn-primary btn-sm">Pay Now</button></td></tr>
+              <tr><td>user_0d5c@gmail.com</td><td>$76</td><td>—</td><td>—</td><td><span class="pill pill-yellow">Pending</span></td><td><button class="btn btn-primary btn-sm">Pay Now</button></td></tr>
+              <tr><td>user_2b7a@gmail.com</td><td>$58</td><td>—</td><td>—</td><td><span class="pill pill-yellow">Pending</span></td><td><button class="btn btn-primary btn-sm">Pay Now</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SUPPORT ══════ -->
+    <div class="page" id="page-support">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Open Tickets</div><div class="stat-value stat-down">3</div></div>
+        <div class="stat-card"><div class="stat-label">Resolved (7d)</div><div class="stat-value stat-up">14</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Response</div><div class="stat-value">2.4h</div></div>
+        <div class="stat-card"><div class="stat-label">Inbox</div><div class="stat-value">support@bb-vpn.com</div><div class="stat-sub">via Cloudflare + Resend</div></div>
+      </div>
+
+      <div class="support-layout">
+        <!-- Ticket list -->
+        <div class="ticket-list">
+          <div class="ticket-list-head">
+            Tickets
+            <span class="badge" style="margin-left:8px">3 new</span>
+          </div>
+          <div class="ticket-item ticket-unread active" onclick="openTicket(0,this)">
+            <div class="ticket-from">user_4f2a@gmail.com <span class="ticket-time">10 min</span></div>
+            <div class="ticket-subject">Can't connect to EU server</div>
+          </div>
+          <div class="ticket-item ticket-unread" onclick="openTicket(1,this)">
+            <div class="ticket-from">user_9a2f@gmail.com <span class="ticket-time">1h</span></div>
+            <div class="ticket-subject">Refund request — changed mind</div>
+          </div>
+          <div class="ticket-item ticket-unread" onclick="openTicket(2,this)">
+            <div class="ticket-from">user_3c8e@gmail.com <span class="ticket-time">3h</span></div>
+            <div class="ticket-subject">How do I add more devices?</div>
+          </div>
+          <div class="ticket-item" onclick="openTicket(3,this)">
+            <div class="ticket-from">user_1e3d@gmail.com <span class="ticket-time">Yesterday</span></div>
+            <div class="ticket-subject">Account suspended by mistake?</div>
+          </div>
+          <div class="ticket-item" onclick="openTicket(4,this)">
+            <div class="ticket-from">user_0d5c@gmail.com <span class="ticket-time">2d ago</span></div>
+            <div class="ticket-subject">Invoice request for company</div>
+          </div>
+        </div>
+
+        <!-- Ticket view -->
+        <div class="ticket-view">
+          <div class="ticket-view-head">
+            <div class="ticket-view-subject" id="tvSubject">Can't connect to EU server</div>
+            <div class="ticket-view-meta" id="tvMeta">From: user_4f2a@gmail.com · Apr 23, 2026 · <span class="pill pill-red" style="font-size:11px">Open</span></div>
+          </div>
+          <div class="ticket-messages" id="tvMessages">
+            <div class="msg msg-user">
+              <div class="msg-sender">user_4f2a@gmail.com</div>
+              Hi, I've been trying to connect to the EU server for the past hour but it keeps timing out. My other servers work fine. WireGuard shows "Handshake did not complete" error.
+            </div>
+          </div>
+          <div class="quick-bar" id="quickBar"></div>
+          <div class="ticket-reply" style="position:relative">
+            <div class="autocomplete-popup" id="acPopup"></div>
+            <textarea id="replyBox" placeholder="Type your reply… or / for quick commands" rows="2" onkeydown="handleReply(event)" oninput="handleInput(this)"></textarea>
+            <button class="btn btn-primary" onclick="sendReply()">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Commands Manager -->
+      <div class="table-card">
+        <div class="table-head">
+          <div class="table-title">Quick Commands</div>
+          <span style="font-size:12px;color:var(--muted)">Вводи / в поле ответа — появится список</span>
+        </div>
+        <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:grid;grid-template-columns:80px 1fr auto;gap:10px;align-items:end">
+            <div class="field"><label>Команда</label><input id="newCmdKey" placeholder="/1" style="font-family:monospace"></div>
+            <div class="field"><label>Текст ответа</label><input id="newCmdText" placeholder="Добрый день! Чем можем помочь?"></div>
+            <button class="btn btn-primary" onclick="addCmd()">+ Добавить</button>
+          </div>
+          <table>
+            <thead><tr><th>Ключ</th><th>Текст</th><th></th></tr></thead>
+            <tbody id="cmdTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Email integration info -->
+      <div class="table-card">
+        <div class="table-head"><div class="table-title">Email Integration Setup</div></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:13px;color:var(--muted);line-height:1.7">
+            Чтобы входящие письма от пользователей появлялись здесь автоматически, настрой следующее:
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px">
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px">
+              <div style="font-weight:600;margin-bottom:6px">1. Cloudflare Email Routing</div>
+              <div style="font-size:12px;color:var(--muted)">dash.cloudflare.com → Email Routing → создай адрес <b style="color:var(--text)">support@bb-vpn.com</b> и направь на Cloudflare Worker</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px">
+              <div style="font-weight:600;margin-bottom:6px">2. Worker обработчик</div>
+              <div style="font-size:12px;color:var(--muted)">Worker получает письмо, парсит его и сохраняет в D1 / KV — откуда эта вкладка читает тикеты</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px">
+              <div style="font-weight:600;margin-bottom:6px">3. Resend для ответов</div>
+              <div style="font-size:12px;color:var(--muted)">Кнопка Send вызывает <b style="color:var(--text)">POST /api/support-reply</b> → Worker отправляет через Resend от имени support@bb-vpn.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const pageMeta = {
+    dashboard: { title: 'Dashboard',   sub: "Welcome back — here's what's happening" },
+    payments:  { title: 'Payments',    sub: 'Transactions and refunds' },
+    users:     { title: 'Users',       sub: 'Subscribers and accounts' },
+    servers:   { title: 'Servers',     sub: 'Infrastructure status' },
+    traffic:   { title: 'Traffic',     sub: 'Bandwidth usage across all regions' },
+    promo:     { title: 'Promo Codes', sub: 'Discounts and campaigns' },
+    referral:  { title: 'Referrals',   sub: 'Affiliates, referrals, and payouts' },
+    support:   { title: 'Support',     sub: 'Customer tickets via support@bb-vpn.com' },
+  };
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (el) { el.classList.add('active'); }
+    else {
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.getAttribute('onclick')?.includes("'" + id + "'")) n.classList.add('active');
+      });
+    }
+    document.getElementById('pageTitle').textContent = pageMeta[id].title;
+    document.getElementById('pageSub').textContent   = pageMeta[id].sub;
+  }
+
+  // Tab switching
+  function switchTab(group, tab) {
+    document.querySelectorAll(`#${group}-${tab}`).forEach(() => {});
+    const allContents = document.querySelectorAll(`[id^="${group}-"]`);
+    const allTabs     = document.querySelectorAll(`#page-${currentPage(group)} .tab`);
+    allContents.forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(`${group}-${tab}`);
+    if (target) target.classList.add('active');
+    // activate tab button
+    document.querySelectorAll('.tabs .tab').forEach(t => {
+      if (t.getAttribute('onclick')?.includes(`'${tab}'`) && t.closest('.table-card') === target?.closest('.table-card')) {
+        t.classList.add('active');
+      } else if (t.closest('.table-card') === target?.closest('.table-card')) {
+        t.classList.remove('active');
+      }
+    });
+  }
+
+  function currentPage(group) {
+    const map = { pay: 'payments', udet: 'users', ref: 'referral' };
+    return map[group] || group;
+  }
+
+  // Table search filter
+  function filterTable(tbodyId, query) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    const q = query.toLowerCase();
+    tbody.querySelectorAll('tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  // User data mock
+  const users = {
+    'user_4f2a@gmail.com': {
+      plan: 'Monthly', status: 'Active', reg: 'Jan 5, 2026', autopay: 'Enabled',
+      nextBill: 'May 23, 2026', method: 'Visa ••4242', totalPaid: '$83.52', refunds: '$0',
+      devices: '4 / 5', regions: 'EU, US', traffic: '22.4 GB', trafficTotal: '94 GB',
+      wgKey: 'pK8mX2nR5tL9vQ3jF7wA1cH6bY0eD4sU+iG/ZoM=',
+      payments: [
+        ['ch_3Pf4a…', '$6.96', 'Monthly', 'Apr 23, 2026', 'Paid'],
+        ['ch_3Pb1a…', '$6.96', 'Monthly', 'Mar 23, 2026', 'Paid'],
+        ['ch_3Pa2a…', '$6.96', 'Monthly', 'Feb 23, 2026', 'Paid'],
+      ],
+      refunds: [],
+    },
+    'user_7c9b@gmail.com': {
+      plan: 'Yearly', status: 'Active', reg: 'Feb 12, 2026', autopay: 'Enabled',
+      nextBill: 'Feb 12, 2027', method: 'Mastercard ••1234', totalPaid: '$69.69', refunds: '$0',
+      devices: '5 / 5', regions: 'EU', traffic: '48.1 GB', trafficTotal: '148 GB',
+      wgKey: 'aT4kN7mC2pR9xB5vW1sL3eQ8jY6hF0oD+uZ/Ig=',
+      payments: [['ch_3Pf3b…', '$69.69', 'Yearly', 'Feb 12, 2026', 'Paid']],
+      refunds: [],
+    },
+    'user_1e3d@gmail.com': {
+      plan: 'Monthly', status: 'Suspended', reg: 'Mar 1, 2026', autopay: 'Disabled',
+      nextBill: '—', method: 'Visa ••5678', totalPaid: '$13.92', refunds: '$0',
+      devices: '2 / 5', regions: 'SG', traffic: '0 GB', trafficTotal: '18 GB',
+      wgKey: 'zL6wM3nA8kT1eC5pQ9rX2vJ4bS7fH0oY+dU/Wg=',
+      payments: [
+        ['ch_3Pf2c…', '$6.96', 'Monthly', 'Apr 21, 2026', 'Failed'],
+        ['ch_3Pc3c…', '$6.96', 'Monthly', 'Mar 21, 2026', 'Paid'],
+      ],
+      refunds: [],
+    },
+    'user_9a2f@gmail.com': {
+      plan: 'Monthly', status: 'Active', reg: 'Mar 15, 2026', autopay: 'Enabled',
+      nextBill: 'May 15, 2026', method: 'PayPal', totalPaid: '$0', refunds: '$6.96',
+      devices: '3 / 5', regions: 'US', traffic: '11.2 GB', trafficTotal: '22 GB',
+      wgKey: 'bN2kP7wR4xA9eM1vL5tC3jQ8sY6hF0oD+uZ/Ig=',
+      payments: [['ch_3Pf1d…', '$6.96', 'Monthly', 'Apr 21, 2026', 'Refunded']],
+      refunds: [['re_3Pf1d…', '$6.96', 'User request', 'Apr 21, 2026']],
+    },
+    'user_0d5c@gmail.com': {
+      plan: 'Yearly', status: 'Active', reg: 'Apr 1, 2026', autopay: 'Enabled',
+      nextBill: 'Apr 1, 2027', method: 'Visa ••9999', totalPaid: '$69.69', refunds: '$0',
+      devices: '5 / 5', regions: 'EU, US, SG', traffic: '61.8 GB', trafficTotal: '62 GB',
+      wgKey: 'cQ5mL8nT3pA6xR1vW4sK9eJ2bY7hF0oD+uZ/Wg=',
+      payments: [['ch_3Pf0e…', '$69.69', 'Yearly', 'Apr 1, 2026', 'Paid']],
+      refunds: [],
+    },
+    'user_3c8e@gmail.com': {
+      plan: 'Monthly', status: 'Trial', reg: 'Apr 10, 2026', autopay: 'Disabled',
+      nextBill: 'May 10, 2026', method: '—', totalPaid: '$6.96', refunds: '$6.96',
+      devices: '1 / 5', regions: 'EU', traffic: '4.2 GB', trafficTotal: '4.2 GB',
+      wgKey: 'dR6nM9kT2pA5xL8vW3sQ1eC4bY7hF0oD+uZ/Sg=',
+      payments: [['ch_3Paz2…', '$6.96', 'Monthly', 'Apr 10, 2026', 'Paid']],
+      refunds: [['re_3Paz2…', '$6.96', 'Duplicate charge', 'Apr 14, 2026']],
+    },
+  };
+
+  function openUser(email) {
+    const u = users[email];
+    if (!u) return;
+    document.getElementById('userList').style.display = 'none';
+    const det = document.getElementById('userDetail');
+    det.classList.add('active');
+    document.getElementById('detailBreadcrumb').textContent = email;
+    document.getElementById('detailAvatar').textContent = email[0].toUpperCase();
+    document.getElementById('detailEmail').textContent   = email;
+    document.getElementById('detailPlan').textContent    = u.plan;
+    document.getElementById('detailStatus').textContent  = u.status;
+    document.getElementById('detailReg').textContent     = u.reg;
+    document.getElementById('detailAutopay').textContent = u.autopay;
+    document.getElementById('dNextBill').textContent     = u.nextBill;
+    document.getElementById('dMethod').textContent       = u.method;
+    document.getElementById('dTotalPaid').textContent    = u.totalPaid;
+    document.getElementById('dRefunds').textContent      = u.refunds;
+    document.getElementById('dDevices').textContent      = u.devices;
+    document.getElementById('dRegions').textContent      = u.regions;
+    document.getElementById('dTraffic').textContent      = u.traffic;
+    document.getElementById('dTrafficTotal').textContent = u.trafficTotal;
+    document.getElementById('dWgKey').textContent        = u.wgKey;
+    // Payments
+    const pb = document.getElementById('dPayTable');
+    pb.innerHTML = u.payments.map(p =>
+      `<tr><td><span style="color:var(--muted);font-size:12px">${p[0]}</span></td><td>${p[1]}</td><td>${p[2]}</td><td>${p[3]}</td><td><span class="pill pill-${p[4]==='Paid'?'green':p[4]==='Failed'?'red':'yellow'}">${p[4]}</span></td></tr>`
+    ).join('');
+    // Refunds
+    const rb = document.getElementById('dRefTable');
+    rb.innerHTML = u.refunds.length
+      ? u.refunds.map(r => `<tr><td><span style="color:var(--muted);font-size:12px">${r[0]}</span></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')
+      : '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">No refunds</td></tr>';
+  }
+
+  function closeUser() {
+    document.getElementById('userList').style.display = '';
+    document.getElementById('userDetail').classList.remove('active');
+  }
+
+  function copyKey() {
+    const key = document.getElementById('dWgKey').textContent;
+    navigator.clipboard.writeText(key);
+  }
+
+  // Promo type toggle
+  function togglePromoType() {
+    const type = document.getElementById('promoType').value;
+    document.getElementById('promoDiscountWrap').style.display = type === 'regular' ? '' : 'none';
+    document.getElementById('promoGiftWrap').style.display     = type === 'gift'    ? '' : 'none';
+  }
+
+  function fmtDate(val) {
+    if (!val) return '—';
+    return new Date(val).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+
+  function addPromo() {
+    const code  = document.getElementById('promoCode').value.trim().toUpperCase();
+    const type  = document.getElementById('promoType').value;
+    const value = type === 'regular'
+      ? document.getElementById('promoDiscount').value
+      : document.getElementById('promoGift').value;
+    const from   = fmtDate(document.getElementById('promoFrom').value);
+    const to     = fmtDate(document.getElementById('promoExpiry').value);
+    if (!code) return;
+    const typeLabel = type === 'regular'
+      ? '<span class="pill pill-blue">Regular</span>'
+      : '<span class="pill pill-purple">Gift</span>';
+    const row = document.createElement('tr');
+    row.innerHTML = `<td><b>${code}</b></td><td>${typeLabel}</td><td>${value}</td><td>0</td><td>${from} — ${to}</td><td><span class="pill pill-green">Active</span></td><td><button class="btn btn-ghost btn-sm" onclick="this.closest('tr').remove()">Revoke</button></td>`;
+    document.getElementById('promoTable').prepend(row);
+    document.getElementById('promoCode').value = '';
+    document.getElementById('promoFrom').value = '';
+    document.getElementById('promoExpiry').value = '';
+  }
+
+  // ── Quick Commands ──
+  let quickCmds = [
+    { key: '/1', text: 'Добрый день! Чем можем помочь?' },
+    { key: '/2', text: 'Пришлите, пожалуйста, ваш публичный WireGuard ключ.' },
+    { key: '/3', text: 'Ваш вопрос решён. Если появятся трудности — пишите!' },
+    { key: '/4', text: 'Перезапустите WireGuard и попробуйте подключиться снова.' },
+    { key: '/5', text: 'Возврат средств будет обработан в течение 3–5 рабочих дней.' },
+  ];
+
+  function renderQuickBar() {
+    const bar = document.getElementById('quickBar');
+    if (!bar) return;
+    bar.innerHTML = '<span style="font-size:11px;color:var(--muted);margin-right:2px">Быстро:</span>' +
+      quickCmds.map(c =>
+        `<div class="quick-cmd" onclick="insertCmd(${JSON.stringify(c.text)})">
+          <span class="cmd-key">${c.key}</span>
+          <span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.text}</span>
+        </div>`
+      ).join('');
+    renderCmdTable();
+  }
+
+  function renderCmdTable() {
+    const t = document.getElementById('cmdTable');
+    if (!t) return;
+    t.innerHTML = quickCmds.map((c, i) =>
+      `<tr>
+        <td><b style="color:var(--accent);font-family:monospace">${c.key}</b></td>
+        <td>${c.text}</td>
+        <td><button class="btn btn-ghost btn-sm" onclick="removeCmd(${i})">Delete</button></td>
+      </tr>`
+    ).join('');
+  }
+
+  function insertCmd(text) {
+    const box = document.getElementById('replyBox');
+    box.value = text;
+    box.focus();
+    hideAc();
+  }
+
+  function addCmd() {
+    const key  = document.getElementById('newCmdKey').value.trim();
+    const text = document.getElementById('newCmdText').value.trim();
+    if (!key || !text) return;
+    const k = key.startsWith('/') ? key : '/' + key;
+    const existing = quickCmds.findIndex(c => c.key === k);
+    if (existing >= 0) quickCmds[existing].text = text;
+    else quickCmds.push({ key: k, text });
+    quickCmds.sort((a,b) => a.key.localeCompare(b.key, undefined, {numeric:true}));
+    document.getElementById('newCmdKey').value  = '';
+    document.getElementById('newCmdText').value = '';
+    renderQuickBar();
+  }
+
+  function removeCmd(i) {
+    quickCmds.splice(i, 1);
+    renderQuickBar();
+  }
+
+  // Autocomplete popup
+  let acIndex = -1;
+
+  function handleInput(el) {
+    const val = el.value;
+    if (!val.startsWith('/') || val.includes(' ')) { hideAc(); return; }
+    const matches = quickCmds.filter(c => c.key.startsWith(val));
+    const popup = document.getElementById('acPopup');
+    if (!matches.length) { hideAc(); return; }
+    acIndex = -1;
+    popup.innerHTML = matches.map((c, i) =>
+      `<div class="ac-item" data-idx="${i}" onclick="insertCmd(${JSON.stringify(c.text)})">
+        <span class="ac-key">${c.key}</span>
+        <span class="ac-text">${c.text}</span>
+      </div>`
+    ).join('');
+    popup.classList.add('visible');
+  }
+
+  function hideAc() {
+    const p = document.getElementById('acPopup');
+    if (p) p.classList.remove('visible');
+    acIndex = -1;
+  }
+
+  // Support
+  const tickets = [
+    { from: 'user_4f2a@gmail.com', subject: "Can't connect to EU server", date: 'Apr 23, 2026', status: 'Open',
+      msgs: ["Hi, I've been trying to connect to the EU server for the past hour but it keeps timing out. My other servers work fine. WireGuard shows 'Handshake did not complete' error."] },
+    { from: 'user_9a2f@gmail.com', subject: 'Refund request — changed mind', date: 'Apr 23, 2026', status: 'Open',
+      msgs: ["Hello, I'd like to request a refund for my last payment. I no longer need the VPN service. Thank you."] },
+    { from: 'user_3c8e@gmail.com', subject: 'How do I add more devices?', date: 'Apr 23, 2026', status: 'Open',
+      msgs: ["Hi! I want to add my phone and tablet to the VPN. How do I do that? I only set up my laptop so far."] },
+    { from: 'user_1e3d@gmail.com', subject: 'Account suspended by mistake?', date: 'Apr 22, 2026', status: 'Resolved',
+      msgs: ["My account seems to be suspended but I didn't cancel. Please help.", "Admin: We've checked — your last payment failed. Please update your payment method in your Stripe portal."] },
+    { from: 'user_0d5c@gmail.com', subject: 'Invoice request for company', date: 'Apr 21, 2026', status: 'Resolved',
+      msgs: ["Could you please send me an invoice for my yearly subscription? Our accounting needs it. Company name: Acme Corp.", "Admin: Invoice sent to your email. Let us know if you need anything else!"] },
+  ];
+
+  let currentTicket = 0;
+
+  function openTicket(idx, el) {
+    currentTicket = idx;
+    const t = tickets[idx];
+    document.querySelectorAll('.ticket-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    el.classList.remove('ticket-unread');
+    document.getElementById('tvSubject').textContent = t.subject;
+    document.getElementById('tvMeta').innerHTML = `From: ${t.from} · ${t.date} · <span class="pill ${t.status==='Open'?'pill-red':'pill-green'}" style="font-size:11px">${t.status}</span>`;
+    const box = document.getElementById('tvMessages');
+    box.innerHTML = t.msgs.map((m, i) => {
+      const isAdmin = m.startsWith('Admin:');
+      return `<div class="msg ${isAdmin ? 'msg-admin' : 'msg-user'}">
+        <div class="msg-sender">${isAdmin ? 'You (Admin)' : t.from}</div>
+        ${isAdmin ? m.replace('Admin: ','') : m}
+      </div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function sendReply() {
+    const box = document.getElementById('replyBox');
+    const text = box.value.trim();
+    if (!text) return;
+    tickets[currentTicket].msgs.push('Admin: ' + text);
+    tickets[currentTicket].status = 'Resolved';
+    box.value = '';
+    openTicket(currentTicket, document.querySelectorAll('.ticket-item')[currentTicket]);
+  }
+
+  function handleReply(e) {
+    const popup = document.getElementById('acPopup');
+    const items = popup ? popup.querySelectorAll('.ac-item') : [];
+    if (popup?.classList.contains('visible') && items.length) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        acIndex = Math.min(acIndex + 1, items.length - 1);
+        items.forEach((el,i) => el.classList.toggle('selected', i === acIndex));
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        acIndex = Math.max(acIndex - 1, 0);
+        items.forEach((el,i) => el.classList.toggle('selected', i === acIndex));
+        return;
+      }
+      if (e.key === 'Enter' || e.key === 'Tab') {
+        e.preventDefault();
+        const sel = acIndex >= 0 ? items[acIndex] : items[0];
+        sel?.click();
+        return;
+      }
+      if (e.key === 'Escape') { hideAc(); return; }
+    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+  }
+
+  // Init
+  renderQuickBar();
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.ticket-reply')) hideAc();
+  });
+</script>
+</body>
+</html>
